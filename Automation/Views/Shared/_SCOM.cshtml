@@ -1,0 +1,42 @@
+﻿@model Automation.Models.SCOM
+
+<div class="metric" style="display: block; margin: 10px; width: 40%;">
+    <div class="metric-inner">
+        <header class="metric-header">
+            <h1 class="metric-title">Windows Auto Alerts</h1>
+        </header>
+        <div class="metric-body viz-basic">
+            <div class="value">
+                <h1 class="primary-value">@Html.DisplayFor(model => model.TotalNew)</h1>
+                <h2>New Alerts</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="metric" style="display: block; margin: 10px; width: 40%;">
+    <div class="metric-inner">
+        <header class="metric-header">
+            <h1 class="metric-title">Critical Servers</h1>
+        </header>
+
+        <div class="metric-body viz-basic-with-7-and-40-day-comparison">
+            <div class="value">
+                <div class="current-value">
+                    <h1 class="primary-value">@Html.DisplayFor(model => model.TotalClusters)</h1>
+                    <h2>Total</h2>
+                </div>
+                <div class="comparison_wrapper">
+                    <div class="left_comparison">
+                        <h2 class="secondary-value">@Html.DisplayFor(model => model.ClustersWarning)</h2>
+                        <h4>Warning</h4>
+                    </div>
+                    <div class="right_comparison">
+                        <h2 class="primary-value">@Html.DisplayFor(model => model.ClustersError)</h2>
+                        <h4>Error</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
