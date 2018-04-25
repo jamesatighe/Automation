@@ -422,6 +422,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ADController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PowerShellController.cs" />
     <Compile Include="Controllers\SCOMController.cs" />
@@ -457,7 +458,21 @@
     <Compile Include="Migrations\201804191349064_SCOMAlert2.Designer.cs">
       <DependentUpon>201804191349064_SCOMAlert2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804241316285_ADGPO.cs" />
+    <Compile Include="Migrations\201804241316285_ADGPO.Designer.cs">
+      <DependentUpon>201804241316285_ADGPO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804241451439_adgpo2.cs" />
+    <Compile Include="Migrations\201804241451439_adgpo2.Designer.cs">
+      <DependentUpon>201804241451439_adgpo2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804241454216_adgpo3.cs" />
+    <Compile Include="Migrations\201804241454216_adgpo3.Designer.cs">
+      <DependentUpon>201804241454216_adgpo3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AD.cs" />
+    <Compile Include="Models\GPO.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\PowerShell.cs" />
     <Compile Include="Models\SCOM.cs" />
@@ -471,10 +486,12 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\SCOMstylesheet.css" />
+    <Content Include="Content\sort-table.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\AD.jpg" />
     <Content Include="Images\PowerShell.png" />
     <Content Include="Images\scom.png" />
     <Content Include="Scripts\bootstrap.js" />
@@ -483,6 +500,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery.tablesorter.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -515,7 +534,9 @@
     <Content Include="Views\Shared\_PowerShell.cshtml" />
     <Content Include="Views\Shared\_SCOM.cshtml" />
     <Content Include="Views\SCOM\Index.cshtml" />
-    <Content Include="Views\Shared\_SCOMAlert.cshtml" />
+    <Content Include="Views\Shared\_SCOMAlertNew.cshtml" />
+    <Content Include="Views\Shared\_SCOMAlertResolved.cshtml" />
+    <Content Include="Views\AD\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -558,6 +579,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804191349064_SCOMAlert2.resx">
       <DependentUpon>201804191349064_SCOMAlert2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804241316285_ADGPO.resx">
+      <DependentUpon>201804241316285_ADGPO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804241451439_adgpo2.resx">
+      <DependentUpon>201804241451439_adgpo2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804241454216_adgpo3.resx">
+      <DependentUpon>201804241454216_adgpo3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

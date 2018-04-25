@@ -1,0 +1,112 @@
+﻿@model IEnumerable<Automation.Models.AD>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><img src="~/Images/AD.jpg" style="height: 100px; margin: 5px"><span style="vertical-align: top">Active Directory Monitoring </span></h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Domain)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DomainController)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Connection)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RepTestState)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RepTestResult)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NetLogonTestState)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NetLogonTestResult)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NetLogonSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NTDSSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KDCSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DNSSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.W32TimeSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DFSRSvc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Created)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Domain)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DomainController)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Connection)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RepTestState)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RepTestResult)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NetLogonTestState)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NetLogonTestResult)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NetLogonSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NTDSSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KDCSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DNSSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.W32TimeSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DFSRSvc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Created)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ADId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ADId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ADId })
+        </td>
+    </tr>
+}
+
+</table>

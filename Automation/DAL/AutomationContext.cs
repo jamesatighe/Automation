@@ -18,6 +18,8 @@ namespace Automation.DAL
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<SCOM> SCOM { get; set; }
         public DbSet<SCOMAlert> SCOMAlert { get; set; }
+        public DbSet<AD> AD { get; set; }
+        public DbSet<GPO> GPO { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -11,7 +11,6 @@ namespace Automation.ViewModels
         public string MonitorPath { get; set; }
         public string MonitoredObject { get; set; }
         public string MonitoredObjectHealth { get; set; }
-        public DateTime Created { get; set; }
         public Nullable<DateTime> Resolved { get; set; }
         public string ResolvedBy { get; set; }
         public bool IsMonitorAlert { get; set; }

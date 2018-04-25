@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
 
+
 namespace Automation.Controllers
 {
     public class SCOMController : Controller
@@ -100,7 +101,7 @@ namespace Automation.Controllers
                 SCOM scom = db.SCOM.OrderByDescending(o => o.ID).FirstOrDefault();
                 return PartialView(partialName, scom);
             }
-            else
+            else if (partialName == "_SCOMAlertNew")
             {
                 var viewModel = new List<SCOMNewViewModel>();
                 List<SCOMAlert> scomalert = await db.SCOMAlert.ToListAsync();
@@ -116,6 +117,29 @@ namespace Automation.Controllers
                         MonitorPath = alert.MonitorPath,
                         PrincipalName = alert.PrincipalName
                     });
+                }
+                return PartialView(partialName, viewModel);
+            }
+            else
+            {
+
+                var viewModel = new List<SCOMResolvedViewModel>();
+                List<SCOMAlert> scomalert = await db.SCOMAlert.ToListAsync();
+
+                foreach (var alert in scomalert)
+                {
+                    viewModel.Add(new ViewModels.SCOMResolvedViewModel()
+                    {
+                        AlertName = alert.AlertName,
+                        MonitorPath = alert.MonitorPath,
+                        MonitoredObject = alert.MonitoredObject,
+                        Resolved = alert.Resolved,
+                        ResolvedBy = alert.ResolvedBy,
+                        MonitoredObjectHealth = alert.MonitoredObjectHealth,
+                        IsMonitorAlert = alert.IsMonitorAlert
+
+                    });
+                      
                 }
                 return PartialView(partialName, viewModel);
             }

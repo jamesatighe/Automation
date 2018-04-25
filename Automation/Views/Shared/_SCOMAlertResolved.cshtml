@@ -1,0 +1,55 @@
+﻿
+@model IEnumerable<Automation.ViewModels.SCOMResolvedViewModel>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AlertName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonitorPath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonitoredObject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Resolved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResolvedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonitoredObjectHealth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsMonitorAlert)
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(model => item.AlertName)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.MonitorPath)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.MonitoredObject)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.Resolved)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.ResolvedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.MonitoredObjectHealth)
+        </td>
+        <td>
+            @Html.DisplayFor(model => item.IsMonitorAlert)
+        </td>
+    </tr>
+}
+</table>

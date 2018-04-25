@@ -7,12 +7,20 @@
 
 <div class="row">
     <div class="col-md-4">
-
+        <h2><b>SCOM Metrics</b></h2>
         <div id="SCOMCards">
             Loading . . . 
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-8">
+        <h2><b>SCOM Alerts</b></h2>
+        <div class="btn-group" role="button" aria-label="Alert Switch">
+            <button type="button" id="switchNew" class="btn btn-info">Switch New</button>
+            <button type="button" id="switchResolved" class="btn btn-info">Switch Resolved</button>
+        </div>
+        <div style="float: right">
+            <button type="button" id="refreshButton" class="btn btn-success">Refresh</button>
+        </div>
 
         <div id="SCOMAlert">
             Loading . . .
@@ -20,15 +28,42 @@
     </div>
 </div>
 
-@section Scripts {
-    <script type='text/javascript'>
 
-        $(function () {
-            setInterval(function () {
-                $('#SCOMCards').load('/SCOM/GetPartial?partialName=_SCOM');
-                $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlert');
-            }, 3000);
+@section Scripts {
+<script type='text/javascript'>
+
+        var alertView = "New"
+        $(document).ready(function () {
+            $('#SCOMAlert').load(' / SCOM / GetPartial ? partialName = _SCOMAlertNew');
+            $('#SCOMCards').load('/SCOM/GetPartial?partialName=_SCOM');
         });
+
+        $(document).ajaxComplete(function (event, xhr, settings) {
+            $("#table").tablesorter();
+        });
+        
+        $('#refreshButton').click(function () {
+
+            if (alertView == "New") {
+                $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
+                $('#SCOMCards').load('/SCOM/GetPartial?partialName=_SCOM');
+            }
+            else if (alertView == "Resolved") {
+                $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertResolved');
+                $('#SCOMCards').load('/SCOM/GetPartial?partialName=_SCOM');
+            }
+        });
+
+        $('#switchNew').click(function () {
+            $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew')
+            alertView = "New"
+        })
+
+        $('#switchResolved').click(function () {
+            $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertResolved')
+            alertView = "Resolved"
+        })
+
 
     </script>
 }
