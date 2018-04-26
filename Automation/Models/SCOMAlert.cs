@@ -15,7 +15,7 @@ namespace Automation.Models
         public string MonitoredObjectHealth { get; set; }
         public string PrincipalName { get; set; }
         public DateTime Created { get; set; }
-        public Nullable<DateTime> Resolved { get; set; }
+        public DateTime Resolved { get; set; }
         public string ResolvedBy { get; set; }
         public bool IsMonitorAlert { get; set; }
     }

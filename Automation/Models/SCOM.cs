@@ -9,14 +9,10 @@ namespace Automation.Models
     {
         public int ID { get; set; }
         public DateTime Time { get; set; }
-        public int NewError { get; set; }
-        public int NewWarning { get; set; }
-        public int TotalNew { get; set; }
-        public int TotalClusters { get; set; }
-        public int ClustersError { get; set; }
-        public int ClustersWarning { get; set; }
-        public int TotalServers { get; set; }
-        public int ServersError { get; set; }
-        public int ServersWarning { get; set; }
+        public bool Cluster { get; set; }
+        public bool Server { get; set; }
+        public string HealthState { get; set; }
+        public bool InMaintenanceMode { get; set; }
+        public string DisplayName { get; set; }
     }
 }

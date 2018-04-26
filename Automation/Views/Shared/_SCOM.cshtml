@@ -1,4 +1,5 @@
-﻿@model Automation.Models.SCOM
+﻿@model IEnumerable<Automation.Models.SCOM>
+
 
 <div class="metric" style="display: block; margin: 10px; width: 40%;">
     <div class="metric-inner">
@@ -6,9 +7,13 @@
             <h1 class="metric-title">Windows Auto Alerts</h1>
         </header>
         <div class="metric-body viz-basic">
-            <div class="value">
-                <h1 class="primary-value">@Html.DisplayFor(model => model.TotalNew)</h1>
-                <h2>New Alerts</h2>
+            <div id="SCOMNewLink" class="value">
+                @if (ViewBag.SCOMNew != null)
+                {
+                    string SCOMNew = ViewBag.SCOMNew.ToString();
+                    <h1 class="primary-value">@ViewBag.SCOMNew</h1>
+                    <h2>New Alerts</h2>
+                }
             </div>
         </div>
     </div>
@@ -22,16 +27,16 @@
         <div class="metric-body viz-basic-with-7-and-40-day-comparison">
             <div class="value">
                 <div class="current-value">
-                    <h1 class="primary-value">@Html.DisplayFor(model => model.TotalClusters)</h1>
+                    <h1 class="primary-value">@Model.Count().ToString()</h1>
                     <h2>Total</h2>
                 </div>
                 <div class="comparison_wrapper">
                     <div class="left_comparison">
-                        <h2 class="secondary-value">@Html.DisplayFor(model => model.ClustersWarning)</h2>
+                        <h2 class="secondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
                         <h4>Warning</h4>
                     </div>
                     <div class="right_comparison">
-                        <h2 class="primary-value">@Html.DisplayFor(model => model.ClustersError)</h2>
+                        <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
                         <h4>Error</h4>
                     </div>
                 </div>

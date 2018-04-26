@@ -6,6 +6,19 @@
     <h1>SSE WININF - Monitoring and Automation Site</h1>
 </div>
 
+<div id="SCOMNewModal" class="modal" tabindex="1" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="SCOMNew" style="font-size:18px;">
+            </div>
+            <div>
+                <button id="SCOMNewClose" class="btn btn-success btn-lg">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="col-md-12">
     <h2>Welcome to the SSE WinInf Monitoring and Automation Site</h2>
     <p>
@@ -24,7 +37,7 @@
     <div class="col-md-6">
         <h2><img src="~/Images/PowerShell.png" style="height: 100px; margin: 5px"><span style="vertical-align: top">PowerShell Scripts</span></h2>
         <div id="PSPartial">
-            Loading. . . 
+            Loading. . .
         </div>
     </div>
 </div>
@@ -39,7 +52,15 @@
             }, 3000);
         });
 
+        $(document).on('click', '#SCOMNewLink', function () {
+            $('#SCOMNewModal').fadeIn();
+            $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
+        });
+
+       
+        $('#SCOMNewClose').click(function () {
+            $('#SCOMNewModal').fadeOut();
+        });
     </script>
 }
-
-
+    

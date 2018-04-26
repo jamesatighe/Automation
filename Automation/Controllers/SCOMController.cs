@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
-
+using System;
+using PagedList;
 
 namespace Automation.Controllers
 {
@@ -98,7 +99,11 @@ namespace Automation.Controllers
         {
             if (partialName == "_SCOM")
             {
-                SCOM scom = db.SCOM.OrderByDescending(o => o.ID).FirstOrDefault();
+                //Get new alerts and add to ViewBag for display.
+                DateTime date = new DateTime(1753,1,1);
+                List<SCOMAlert> scomalert = await db.SCOMAlert.Where(s => s.Resolved == date).ToListAsync();
+                ViewBag.SCOMNew = scomalert.Count();
+                List<SCOM> scom = await db.SCOM.ToListAsync();
                 return PartialView(partialName, scom);
             }
             else if (partialName == "_SCOMAlertNew")
