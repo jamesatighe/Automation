@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using PagedList;
+using PagedList.Mvc;
 
 namespace Automation.Controllers
 {
@@ -95,15 +96,21 @@ namespace Automation.Controllers
         }
 
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
-        public async Task<ActionResult> GetPartial(string partialName)
+        public async Task<PartialViewResult> GetPartial(string partialName, string sortOrder, int? page, int? pageLength)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.PageLength = pageLength;
+
             if (partialName == "_SCOM")
             {
                 //Get new alerts and add to ViewBag for display.
                 DateTime date = new DateTime(1753,1,1);
                 List<SCOMAlert> scomalert = await db.SCOMAlert.Where(s => s.Resolved == date).ToListAsync();
                 ViewBag.SCOMNew = scomalert.Count();
-                List<SCOM> scom = await db.SCOM.ToListAsync();
+                var scom = await db.SCOM.ToListAsync();
+                
+
+
                 return PartialView(partialName, scom);
             }
             else if (partialName == "_SCOMAlertNew")
@@ -123,7 +130,40 @@ namespace Automation.Controllers
                         PrincipalName = alert.PrincipalName
                     });
                 }
-                return PartialView(partialName, viewModel);
+
+                if (!String.IsNullOrWhiteSpace(sortOrder))
+                {
+                    if (sortOrder == "name_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.AlertName).ToList();
+                    else if (sortOrder == "date")
+                        viewModel = viewModel.OrderBy(s => s.Created).ToList();
+                    else if (sortOrder == "date_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.Created).ToList();
+                    else if (sortOrder == "alerthealth")
+                        viewModel = viewModel.OrderBy(s => s.AlertHealth).ToList();
+                    else if (sortOrder == "alerthealth_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.AlertHealth).ToList();
+                    else if (sortOrder == "monitorpath")
+                        viewModel = viewModel.OrderBy(s => s.MonitorPath).ToList();
+                    else if (sortOrder == "monitorpath_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.MonitorPath).ToList();
+                    else if (sortOrder == "monitorobject")
+                        viewModel = viewModel.OrderBy(s => s.MonitoredObject).ToList();
+                    else if (sortOrder == "monitorobject_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.MonitoredObject).ToList();
+                    else if (sortOrder == "principalname")
+                        viewModel = viewModel.OrderBy(s => s.PrincipalName).ToList();
+                    else if (sortOrder == "principalname_desc")
+                        viewModel = viewModel.OrderByDescending(s => s.PrincipalName).ToList();
+                }
+                else
+                { 
+                    viewModel = viewModel.OrderBy(s => s.AlertName).ToList();
+                }
+
+                int pageSize = pageLength ?? 5;
+                int pageNumber = page ?? 1;
+                return PartialView(partialName, viewModel.ToPagedList(pageNumber, pageSize));
             }
             else
             {
@@ -148,6 +188,11 @@ namespace Automation.Controllers
                 }
                 return PartialView(partialName, viewModel);
             }
+        }
+
+        public void ParentViewBag(string message)
+        {
+            ViewBag.AlertName = message;
         }
     }
 }

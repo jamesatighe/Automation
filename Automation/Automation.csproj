@@ -499,6 +499,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery.loadmask.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\SCOMstylesheet.css" />
     <Content Include="Content\sort-table.css" />
@@ -515,6 +516,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.tablesorter.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

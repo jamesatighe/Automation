@@ -6,13 +6,19 @@
     <h1>SSE WININF - Monitoring and Automation Site</h1>
 </div>
 
-<div id="SCOMNewModal" class="modal" tabindex="1" style="display:none;">
-    <div class="modal-dialog">
+<div id="SCOMNewModal" class="modal fade" role="dialog">
+    <div class="modal-dialog-centered">
         <div class="modal-content">
-            <div id="SCOMNew" style="font-size:18px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New SCOM Alerts</h4>
             </div>
-            <div>
-                <button id="SCOMNewClose" class="btn btn-success btn-lg">OK</button>
+            <div class="modal-body">
+                <div id="SCOMNew" style="font-size:18px;">
+                </div>
+                <div class="modal-footer">
+                    <button id="SCOMNewClose" class="btn btn-success btn-lg" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -45,22 +51,34 @@
 @section Scripts {
     <script type='text/javascript'>
 
+        $(document).ready(function () {
+            $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM');
+            $('#PSPartial').load('/PowerShell/GetPSPartial');
+        });
+
         $(function () {
             setInterval(function () {
                 $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM');
                 $('#PSPartial').load('/PowerShell/GetPSPartial');
-            }, 3000);
+            }, 900000);
         });
 
         $(document).on('click', '#SCOMNewLink', function () {
-            $('#SCOMNewModal').fadeIn();
             $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
         });
+        $(document).ready(function () {
+            $('#SCOMNewModal').on('show.bs.modal', function () {
+                $(this).find('.modal-dialog').css({
 
-       
-        $('#SCOMNewClose').click(function () {
-            $('#SCOMNewModal').fadeOut();
+                    display: 'table',
+                    width: 'auto', //set width to auto
+                    height: 'height', //set height to auto
+                    'max-height': '100%'
+                });
+            });
         });
+        
+
     </script>
 }
-    
+

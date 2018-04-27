@@ -1,25 +1,31 @@
-﻿@model IEnumerable<Automation.ViewModels.SCOMNewViewModel>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Automation.ViewModels.SCOMNewViewModel>
+
+<div class="btn-group" role="button" aria-label="Alert Switch">
+    <button type="button" id="sort10" class="btn btn-info">10</button>
+    <button type="button" id="sort15" class="btn btn-info">15</button>
+    <button type="button" id="sort20" class="btn btn-info">20</button>
+</div>
 
 <table id="table" class="table">
     <thead>
         <tr class="header">
             <th>
-                @Html.DisplayNameFor(model => model.AlertHealth)
+                @Html.ActionLink("Alert Health", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "alerthealth" ? "alerthealth_desc" : "alerthealth", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AlertName)
+                @Html.ActionLink("Alert Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "name" ? "name_desc" : "name", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+            <th>
+                @Html.ActionLink("Monitor Path", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorpath" ? "monitorpath_desc" : "monitorpath", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MonitorPath)
+                @Html.ActionLink("Monitored Object", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorobject" ? "monitorobject_desc" : "monitorobject", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MonitoredObject)
+                @Html.ActionLink("Principal Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "principalname" ? "principalname_desc" : "principalname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrincipalName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
+                @Html.ActionLink("Created", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "date" ? "date_desc" : "date", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
         </tr>
     </thead>
@@ -49,4 +55,57 @@
         }
     </tbody>
 </table>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<div id="myPager">
+    @Html.PagedListPager(Model, page => Url.Action("GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", page, sortOrder = ViewBag.CurrentSort }))
+</div>
+
+
+<script type='text/javascript'>
+    $('.SortButton').click(function (e) {
+        $('#SCOMNew').mask("Waiting . . .");
+        e.preventDefault();
+        $.ajax({
+            url: this.href,
+            type: 'POST',
+            cache: false,
+            success: function (result) {
+                $('#SCOMNew').unmask("Waiting . . .");
+                $('#SCOMNew').html(result);
+            }
+        })
+        return false;
+    });
+
+    $('#myPager').on('click', 'a', function (e) {
+        e.preventDefault();
+        $('#SCOMNew').mask("Waiting . . .");
+        $.ajax({
+            url: this.href,
+            type: 'POST',
+            cache: 'false',
+            success: function (result) {
+                $('#SCOMNew').unmask("Waiting . . .");
+                $('#SCOMNew').html(result);
+            }
+        })
+        return false;
+    });
+
+    $('#sort10').click(function () {
+        alert(@ViewBag.CurrentSort);
+        @(ViewBag.PageLength = "10")
+        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+    $('#sort15').click(function () {
+        @(ViewBag.PageLength = "15")
+        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+    $('#sort20').click(function () {
+        @(ViewBag.PageLength = "20")
+        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+
+</script>
+
 
