@@ -14,7 +14,7 @@
                 <h4 class="modal-title">New SCOM Alerts</h4>
             </div>
             <div class="modal-body">
-                <div id="SCOMNew" style="font-size:18px;">
+                <div id="SCOMAlert" style="font-size:18px;">
                 </div>
                 <div class="modal-footer">
                     <button id="SCOMNewClose" class="btn btn-success btn-lg" data-dismiss="modal">Close</button>
@@ -64,7 +64,7 @@
         });
 
         $(document).on('click', '#SCOMNewLink', function () {
-            $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
+            $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
         });
         $(document).ready(function () {
             $('#SCOMNewModal').on('show.bs.modal', function () {

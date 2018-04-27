@@ -8,7 +8,7 @@
 </div>
 
 <table id="table" class="table">
-    <thead>
+
         <tr class="header">
             <th>
                 @Html.ActionLink("Alert Health", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "alerthealth" ? "alerthealth_desc" : "alerthealth", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
@@ -28,13 +28,18 @@
                 @Html.ActionLink("Created", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "date" ? "date_desc" : "date", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
             </th>
         </tr>
-    </thead>
-    <tbody>
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AlertHealth)
+                    @if (item.AlertHealth.Contains("Error"))
+                    {
+                    <span><i class="fas fa-exclamation-circle" style="color:red"></i> Error</span>
+                    }
+                    else
+                    {
+                        <span><i class="fas fa-exclamation-triangle" style="color:orange"></i> Warning</span>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.AlertName)
@@ -53,25 +58,23 @@
                 </td>
             </tr>
         }
-    </tbody>
 </table>
+
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-<div id="myPager">
+<div id="myPager" class="pagination">
     @Html.PagedListPager(Model, page => Url.Action("GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", page, sortOrder = ViewBag.CurrentSort }))
 </div>
 
 
 <script type='text/javascript'>
     $('.SortButton').click(function (e) {
-        $('#SCOMNew').mask("Waiting . . .");
         e.preventDefault();
         $.ajax({
             url: this.href,
             type: 'POST',
             cache: false,
             success: function (result) {
-                $('#SCOMNew').unmask("Waiting . . .");
-                $('#SCOMNew').html(result);
+                $('#SCOMAlert').html(result);
             }
         })
         return false;
@@ -79,31 +82,28 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
     $('#myPager').on('click', 'a', function (e) {
         e.preventDefault();
-        $('#SCOMNew').mask("Waiting . . .");
         $.ajax({
             url: this.href,
             type: 'POST',
             cache: 'false',
             success: function (result) {
-                $('#SCOMNew').unmask("Waiting . . .");
-                $('#SCOMNew').html(result);
+                $('#SCOMAlert').html(result);
             }
         })
         return false;
     });
 
     $('#sort10').click(function () {
-        alert(@ViewBag.CurrentSort);
         @(ViewBag.PageLength = "10")
-        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
     $('#sort15').click(function () {
         @(ViewBag.PageLength = "15")
-        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
     $('#sort20').click(function () {
         @(ViewBag.PageLength = "20")
-        $('#SCOMNew').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
 
 </script>
