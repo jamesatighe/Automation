@@ -21,13 +21,12 @@
 <div class="metric" style="display: block; margin: 10px; width: 40%;">
     <div class="metric-inner">
         <header class="metric-header">
-            <h1 class="metric-title">Critical Servers</h1>
+            <h1 class="metric-title">Critical Clusters</h1>
         </header>
-
         <div class="metric-body viz-basic-with-7-and-40-day-comparison">
-            <div class="value">
+            <div class="value" id="SCOMClusterLink">
                 <div class="current-value">
-                    <h1 class="primary-value">@Model.Count().ToString()</h1>
+                    <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
                     <h2>Total</h2>
                 </div>
                 <div class="comparison_wrapper">

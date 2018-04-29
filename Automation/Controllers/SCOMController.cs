@@ -7,8 +7,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using PagedList;
-using PagedList.Mvc;
+using X.PagedList;
+using X.PagedList.Mvc.Bootstrap4;
 
 namespace Automation.Controllers
 {
@@ -163,7 +163,46 @@ namespace Automation.Controllers
 
                 int pageSize = pageLength ?? 5;
                 int pageNumber = page ?? 1;
-                return PartialView(partialName, viewModel.ToPagedList(pageNumber, pageSize));
+                return PartialView(partialName, (IPagedList)viewModel.ToPagedList(pageNumber, pageSize));
+            }
+
+            else if (partialName == "_SCOMClusters")
+            {
+                List<SCOM> scom = await db.SCOM.ToListAsync();
+
+                if (!String.IsNullOrWhiteSpace(sortOrder))
+                {
+                    if (sortOrder == "time_desc")
+                         scom.OrderByDescending(s => s.Time).ToList();
+                    else if (sortOrder == "time")
+                        scom.OrderBy(s => s.Time).ToList();
+                    else if (sortOrder == "cluster")
+                        scom.OrderByDescending(s => s.Cluster).ToList();
+                    else if (sortOrder == "cluster_desc")
+                        scom.OrderBy(s => s.Cluster).ToList();
+                    else if (sortOrder == "server")
+                        scom.OrderByDescending(s => s.Server).ToList();
+                    else if (sortOrder == "server_desc")
+                        scom.OrderBy(s => s.Server).ToList();
+                    else if (sortOrder == "healthstate")
+                        scom.OrderByDescending(s => s.HealthState).ToList();
+                    else if (sortOrder == "healthstate_desc")
+                        scom.OrderBy(s => s.HealthState).ToList();
+                    else if (sortOrder == "inmaintenancemode")
+                        scom.OrderByDescending(s => s.InMaintenanceMode).ToList();
+                    else if (sortOrder == "inmaintenancemode_desc")
+                        scom.OrderBy(s => s.InMaintenanceMode).ToList();
+                    else if (sortOrder == "displayname_desc")
+                       scom.OrderByDescending(s => s.DisplayName).ToList();
+                }
+                else
+                {
+                    scom.OrderBy(s => s.DisplayName).ToList();
+                }
+
+                int pageSize = pageLength ?? 5;
+                int pageNumber = page ?? 1;
+                return PartialView(partialName, (IPagedList)scom.ToPagedList(pageNumber, pageSize));
             }
             else
             {

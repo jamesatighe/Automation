@@ -1,0 +1,101 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
+@model X.PagedList.IPagedList<Automation.Models.SCOM>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Time", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "time" ? "time_desc" : "time", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+        <th>
+            @Html.ActionLink("Cluster", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "cluster" ? "cluster_desc" : "cluster", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+        <th>
+            @Html.ActionLink("Server", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "server" ? "server_desc" : "server", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+        <th>
+            @Html.ActionLink("Health State", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "healthstate" ? "healthstate_desc" : "healthstate", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+        <th>
+            @Html.ActionLink("InMaintenanceMode", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "inmaintenancemode" ? "inmaintenancemode_desc" : "inmaintenancemode", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+        <th>
+            @Html.ActionLink("Display Name", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "displayname" ? "displayname_desc" : "displayname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cluster)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Server)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HealthState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InMaintenanceMode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+        </tr>
+    }
+
+</table>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<div id="myPager" class="pagination">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("GetPartial", "SCOM", new { partialName = "_SCOMClusters", page, sortOrder = ViewBag.CurrentSort, pageLength = ViewBag.PageLength }), Bootstrap4PagedListRenderOptions.Classic)
+</div>
+
+
+
+<script type='text/javascript'>
+    $('.SortButton').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: this.href,
+            type: 'POST',
+            cache: false,
+            success: function (result) {
+                $('#SCOMAlert').html(result);
+            }
+        })
+        return false;
+    });
+
+    $('#myPager').on('click', 'a', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: this.href,
+            type: 'POST',
+            cache: 'false',
+            success: function (result) {
+                $('#SCOMAlert').html(result);
+            }
+        })
+        return false;
+    });
+
+    $('#sort10').click(function () {
+        @(ViewBag.PageLength = "10")
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+    $('#sort15').click(function () {
+        @(ViewBag.PageLength = "15")
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+    $('#sort20').click(function () {
+        @(ViewBag.PageLength = "20")
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+    })
+
+</script>
