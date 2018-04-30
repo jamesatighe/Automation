@@ -10,57 +10,59 @@
         <button type="button" id="sort20" class="btn btn-info">20</button>
     </div>
 </div>
-<table id="table" class="table-dark table-responsive-sm">
-
-        <tr class="header">
+<table id="table" class="table table-striped table-sm">
+    <thead class="thead-dark">
+        <tr>
             <th>
-                @Html.ActionLink("Alert Health", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "alerthealth" ? "alerthealth_desc" : "alerthealth", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+                @Html.ActionLink("Alert Health", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "alerthealth" ? "alerthealth_desc" : "alerthealth", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
             </th>
             <th>
-                @Html.ActionLink("Alert Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "name" ? "name_desc" : "name", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-            <th>
-                @Html.ActionLink("Monitor Path", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorpath" ? "monitorpath_desc" : "monitorpath", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+                @Html.ActionLink("Alert Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "name" ? "name_desc" : "name", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
             </th>
             <th>
-                @Html.ActionLink("Monitored Object", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorobject" ? "monitorobject_desc" : "monitorobject", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+                @Html.ActionLink("Monitor Path", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorpath" ? "monitorpath_desc" : "monitorpath", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
             </th>
             <th>
-                @Html.ActionLink("Principal Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "principalname" ? "principalname_desc" : "principalname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+                @Html.ActionLink("Monitored Object", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "monitorobject" ? "monitorobject_desc" : "monitorobject", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
             </th>
             <th>
-                @Html.ActionLink("Created", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "date" ? "date_desc" : "date", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+                @Html.ActionLink("Principal Name", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "principalname" ? "principalname_desc" : "principalname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Created", "GetPartial", "SCOM", new { partialName = "_SCOMAlertNew", sortOrder = ViewBag.CurrentSort == "date" ? "date_desc" : "date", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
             </th>
         </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @if (item.AlertHealth.Contains("Error"))
-                    {
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (item.AlertHealth.Contains("Error"))
+                {
                     <span><i class="fas fa-exclamation-circle" style="color:red"></i> Error</span>
-                    }
-                    else
-                    {
-                        <span><i class="fas fa-exclamation-triangle" style="color:orange"></i> Warning</span>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AlertName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MonitorPath)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MonitoredObject)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrincipalName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-            </tr>
-        }
+                }
+                else
+                {
+                    <span><i class="fas fa-exclamation-triangle" style="color:orange"></i> Warning</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlertName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MonitorPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MonitoredObject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrincipalName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+        </tr>
+    }
 </table>
 
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount

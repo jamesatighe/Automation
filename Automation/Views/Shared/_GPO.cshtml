@@ -12,82 +12,84 @@
         <button type="button" id="sort20" class="btn btn-info">20</button>
     </div>
 </div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Domain Name", "Index", new { sortOrder = ViewBag.CurrentSort == "domainname" ? "domainname_desc" : "domainname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.CurrentSort == "name" ? "name_desc" : "name", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("Guid", "Index", new { sortOrder = ViewBag.CurrentSort == "guid" ? "guid_desc" : "guid", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.CurrentSort == "status" ? "status_desc" : "status", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("User AD Version", "Index", new { sortOrder = ViewBag.CurrentSort == "useradver" ? "useradver_desc" : "useradver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("User Sysvol Version", "Index", new { sortOrder = ViewBag.CurrentSort == "usersysvolver" ? "usersysvolver_desc" : "usersysvolver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-
-            @Html.ActionLink("Comp AD Version", "Index", new { sortOrder = ViewBag.CurrentSort == "compadver" ? "compadver_desc" : "compadver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("Comp Sysvol Version", "Index", new { sortOrder = ViewBag.CurrentSort == "compsysvolver" ? "compsysvolver_desc" : "compsysvolver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("GPO Created", "Index", new { sortOrder = ViewBag.CurrentSort == "gpocreated" ? "gpocreated_desc" : "gpocreated", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("GPO Modified", "Index", new { sortOrder = ViewBag.CurrentSort == "gpomodified" ? "gpomodified_desc" : "gpomodified", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-        <th>
-            @Html.ActionLink("Created", "Index", new { sortOrder = ViewBag.CurrentSort == "created" ? "created_desc" : "created", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<table class="table table-striped table-sm">
+    <thead class="thead-dark">
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DomainName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Guid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserADVer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserSysvolVer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompADVer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompSysvolVer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GPOCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GPOModified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
+            <th>
+                @Html.ActionLink("Domain Name", "Index", new { sortOrder = ViewBag.CurrentSort == "domainname" ? "domainname_desc" : "domainname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.CurrentSort == "name" ? "name_desc" : "name", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Guid", "Index", new { sortOrder = ViewBag.CurrentSort == "guid" ? "guid_desc" : "guid", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Status", "Index", new { sortOrder = ViewBag.CurrentSort == "status" ? "status_desc" : "status", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("User AD Version", "Index", new { sortOrder = ViewBag.CurrentSort == "useradver" ? "useradver_desc" : "useradver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("User Sysvol Version", "Index", new { sortOrder = ViewBag.CurrentSort == "usersysvolver" ? "usersysvolver_desc" : "usersysvolver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+
+                @Html.ActionLink("Comp AD Version", "Index", new { sortOrder = ViewBag.CurrentSort == "compadver" ? "compadver_desc" : "compadver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Comp Sysvol Version", "Index", new { sortOrder = ViewBag.CurrentSort == "compsysvolver" ? "compsysvolver_desc" : "compsysvolver", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("GPO Created", "Index", new { sortOrder = ViewBag.CurrentSort == "gpocreated" ? "gpocreated_desc" : "gpocreated", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("GPO Modified", "Index", new { sortOrder = ViewBag.CurrentSort == "gpomodified" ? "gpomodified_desc" : "gpomodified", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Created", "Index", new { sortOrder = ViewBag.CurrentSort == "created" ? "created_desc" : "created", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
         </tr>
-    }
+    </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DomainName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Guid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserADVer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserSysvolVer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompADVer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompSysvolVer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GPOCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GPOModified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+            </tr>
+        }
 
 </table>
 

@@ -621,6 +621,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Shared\_SCOMClusters.cshtml" />
     <Content Include="Views\Shared\_GPO.cshtml" />
+    <Content Include="Views\Shared\_AD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

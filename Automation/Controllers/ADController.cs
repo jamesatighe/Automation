@@ -13,9 +13,15 @@ namespace Automation.Controllers
     {
         private AutomationContext db = new AutomationContext();
         // GET: AD
-        public async Task<ActionResult> Index()
+        public async Task<PartialViewResult> Index(string sortOrder, int? page, int? pageLength)
         {
-            return View(await db.AD.ToListAsync());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.PageLength = pageLength;
+
+            List<AD> ad = await db.AD.ToListAsync();
+            int pageSize = pageLength ?? 5;
+            int pageNumber = page ?? 1;
+            return PartialView("_AD", (IPagedList)ad.ToPagedList(pageNumber, pageSize));
         }
 
         public async Task<PartialViewResult> GPOIndex(string sortOrder, int? page, int? pageLength)

@@ -1,0 +1,112 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Bootstrap4
+
+@model  X.PagedList.IPagedList<Automation.Models.AD>
+
+<div>
+    <h4>Items per page</h4>
+    <div class="btn-group" role="button" aria-label="Alert Switch">
+        <button type="button" id="sort10" class="btn btn-info">10</button>
+        <button type="button" id="sort15" class="btn btn-info">15</button>
+        <button type="button" id="sort20" class="btn btn-info">20</button>
+    </div>
+</div>
+
+
+<table class="table table-striped table-sm">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.ActionLink("Domain", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Domain Controller", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Connection", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Rep Test State", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Rep Test Result", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("NetLogon State", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("NetLogon Result", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>@Html.ActionLink("NetLogon Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("NTDS Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("KDC Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("DNS Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("W32Time Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("DFSR Svc", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+            <th>
+                @Html.ActionLink("Created", "Index", "AD", new { sortOrder = ViewBag.CurrentSort == "domain" ? "domain_desc" : "domain", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton", @style = "color:white" })
+            </th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Domain)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DomainController)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Connection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RepTestState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RepTestResult)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetLogonTestState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetLogonTestResult)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetLogonSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NTDSSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KDCSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DNSSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.W32TimeSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DFSRSvc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+        </tr>
+    }
+
+</table>
