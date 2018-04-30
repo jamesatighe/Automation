@@ -2,6 +2,10 @@
 using System.Web.Mvc;
 using System.Data.Entity;
 using Automation.DAL;
+using Automation.Models;
+using X.PagedList;
+using X.PagedList.Mvc.Bootstrap4;
+using System.Collections.Generic;
 
 namespace Automation.Controllers
 {
@@ -12,6 +16,18 @@ namespace Automation.Controllers
         public async Task<ActionResult> Index()
         {
             return View(await db.AD.ToListAsync());
+        }
+
+        public async Task<PartialViewResult> GPOIndex(string sortOrder, int? page, int? pageLength)
+        {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.PageLength = pageLength;
+
+            List<GPO> gpo = await db.GPO.ToListAsync();
+            int pageSize = pageLength ?? 5;
+            int pageNumber = page ?? 1;
+
+            return PartialView("_gpo", (IPagedList)gpo.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: AD/Details/5

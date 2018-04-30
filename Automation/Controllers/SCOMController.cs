@@ -173,31 +173,31 @@ namespace Automation.Controllers
                 if (!String.IsNullOrWhiteSpace(sortOrder))
                 {
                     if (sortOrder == "time_desc")
-                         scom.OrderByDescending(s => s.Time).ToList();
+                        scom = scom.OrderByDescending(s => s.Time).ToList();
                     else if (sortOrder == "time")
-                        scom.OrderBy(s => s.Time).ToList();
+                        scom = scom.OrderBy(s => s.Time).ToList();
                     else if (sortOrder == "cluster")
-                        scom.OrderByDescending(s => s.Cluster).ToList();
+                        scom = scom.OrderByDescending(s => s.Cluster).ToList();
                     else if (sortOrder == "cluster_desc")
-                        scom.OrderBy(s => s.Cluster).ToList();
+                        scom = scom.OrderBy(s => s.Cluster).ToList();
                     else if (sortOrder == "server")
-                        scom.OrderByDescending(s => s.Server).ToList();
+                        scom = scom.OrderByDescending(s => s.Server).ToList();
                     else if (sortOrder == "server_desc")
-                        scom.OrderBy(s => s.Server).ToList();
+                        scom = scom.OrderBy(s => s.Server).ToList();
                     else if (sortOrder == "healthstate")
-                        scom.OrderByDescending(s => s.HealthState).ToList();
+                        scom = scom.OrderByDescending(s => s.HealthState).ToList();
                     else if (sortOrder == "healthstate_desc")
-                        scom.OrderBy(s => s.HealthState).ToList();
+                        scom = scom.OrderBy(s => s.HealthState).ToList();
                     else if (sortOrder == "inmaintenancemode")
-                        scom.OrderByDescending(s => s.InMaintenanceMode).ToList();
+                        scom = scom.OrderByDescending(s => s.InMaintenanceMode).ToList();
                     else if (sortOrder == "inmaintenancemode_desc")
-                        scom.OrderBy(s => s.InMaintenanceMode).ToList();
+                        scom = scom.OrderBy(s => s.InMaintenanceMode).ToList();
                     else if (sortOrder == "displayname_desc")
-                       scom.OrderByDescending(s => s.DisplayName).ToList();
+                       scom = scom.OrderByDescending(s => s.DisplayName).ToList();
                 }
                 else
                 {
-                    scom.OrderBy(s => s.DisplayName).ToList();
+                    scom = scom.OrderBy(s => s.DisplayName).ToList();
                 }
 
                 int pageSize = pageLength ?? 5;
