@@ -506,6 +506,7 @@
     <Compile Include="Models\SCOM.cs" />
     <Compile Include="Models\SCOMAlert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\GPOViewModel.cs" />
     <Compile Include="ViewModels\PowerShellViewModel.cs" />
     <Compile Include="ViewModels\SCOMNewViewModel.cs" />
     <Compile Include="ViewModels\SCOMResolvedViewModel.cs" />
@@ -622,6 +623,7 @@
     <Content Include="Views\Shared\_SCOMClusters.cshtml" />
     <Content Include="Views\Shared\_GPO.cshtml" />
     <Content Include="Views\Shared\_AD.cshtml" />
+    <Content Include="Views\Shared\_GPChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

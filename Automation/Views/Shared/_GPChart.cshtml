@@ -1,0 +1,64 @@
+﻿@using System.Text
+@model IList<Automation.ViewModels.GPOViewModel>
+
+<canvas id="chart-div">
+
+</canvas>
+
+@{ 
+    StringBuilder dataList = new StringBuilder("data: [");
+    StringBuilder labelList = new StringBuilder("labels: [");
+    StringBuilder colourList = new StringBuilder("backgroundColor: [");
+
+    var random = new Random();
+    for (var i = 0; i < Model.Count(); i++)
+    {
+        var color = String.Format("#{0:X6}", random.Next(0x1000000));
+
+        labelList.Append("\'" + Model[i].Domain + "\',");
+        dataList.Append("\'" + Model[i].Error + "\',");
+        colourList.Append("\'" + color + "\',");
+    }
+    dataList.Length--;
+    labelList.Length--;
+    dataList.Append("]");
+    labelList.Append("],");
+    colourList.Append("],");
+}
+
+
+<script type="text/javascript">
+    var dynamicColours = function () {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+    };
+    alert(dynamicColours());
+    alert(dynamicColours());
+
+
+
+    var ctx = document.getElementById('chart-div');
+    var GPOPieChart = new Chart(ctx,
+    {
+        type: 'doughnut',
+        data: {
+                @Html.Raw(labelList)
+                datasets: [
+                    {
+                        label: "GPOs",
+                        @Html.Raw(colourList)
+                        @Html.Raw(dataList)
+                    }
+                ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'GPOs in Error (By Domain)'
+            }
+        }
+});
+
+</script>

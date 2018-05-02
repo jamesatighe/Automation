@@ -3,9 +3,11 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using Automation.DAL;
 using Automation.Models;
+using Automation.ViewModels;
 using X.PagedList;
 using X.PagedList.Mvc.Bootstrap4;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Automation.Controllers
 {
@@ -34,6 +36,60 @@ namespace Automation.Controllers
             int pageNumber = page ?? 1;
 
             return PartialView("_gpo", (IPagedList)gpo.ToPagedList(pageNumber, pageSize));
+        }
+
+        public async Task<PartialViewResult> GPOChart()
+        {
+            List<GPO> gpo = await db.GPO.ToListAsync();
+            var domains = gpo.GroupBy(x => x.DomainName).Select(g => g.FirstOrDefault());
+            ViewBag.Domain = domains.First();
+            int UserError = 0;
+            int CompError = 0;
+
+            var viewModel = new List<GPOViewModel>();
+
+            foreach (var item in gpo)
+            {
+                if (item.CompADVer != item.CompSysvolVer)
+                {
+                    CompError++;
+                }
+                if (item.UserADVer != item.UserSysvolVer)
+                {
+                    UserError++;
+                }
+            }
+            foreach (var domain in domains)
+            {
+                var gpoError = 0;
+                var gpoHealthy = 0;
+                string GPOId = "";
+                var errors = await gpo.Where(g => g.DomainName == domain.DomainName).ToListAsync();
+                foreach (var error in errors)
+                {
+                    if ((error.UserADVer != error.UserSysvolVer || error.CompADVer != error.CompSysvolVer))
+                    {
+                        gpoError++;
+                    }
+                    else
+                    {
+                        gpoHealthy++;
+                    }
+                    GPOId = error.GPOId.ToString();
+                    
+                }
+ 
+
+                viewModel.Add(new ViewModels.GPOViewModel()
+                {
+                    Domain = domain.DomainName,
+                    GPOId = GPOId,
+                    Error = gpoError,
+                    Healthy = gpoHealthy
+                });
+            }
+
+            return PartialView("_GPChart", viewModel);
         }
 
         // GET: AD/Details/5
