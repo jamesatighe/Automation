@@ -42,52 +42,32 @@ namespace Automation.Controllers
         {
             List<GPO> gpo = await db.GPO.ToListAsync();
             var domains = gpo.GroupBy(x => x.DomainName).Select(g => g.FirstOrDefault());
-            ViewBag.Domain = domains.First();
-            int UserError = 0;
-            int CompError = 0;
+            ViewBag.Domain = domains.First().DomainName;
 
-            var viewModel = new List<GPOViewModel>();
+            var viewModel = new GPOViewModel();
 
-            foreach (var item in gpo)
+            var gpoError = 0;
+            var gpoHealthy = 0;
+            string GPOId = "";
+            var errors = await gpo.Where(g => g.DomainName == ViewBag.Domain).ToListAsync();
+            foreach (var error in errors)
             {
-                if (item.CompADVer != item.CompSysvolVer)
+                if ((error.UserADVer != error.UserSysvolVer || error.CompADVer != error.CompSysvolVer))
                 {
-                    CompError++;
+                    gpoError++;
                 }
-                if (item.UserADVer != item.UserSysvolVer)
+                else
                 {
-                    UserError++;
+                    gpoHealthy++;
                 }
-            }
-            foreach (var domain in domains)
-            {
-                var gpoError = 0;
-                var gpoHealthy = 0;
-                string GPOId = "";
-                var errors = await gpo.Where(g => g.DomainName == domain.DomainName).ToListAsync();
-                foreach (var error in errors)
-                {
-                    if ((error.UserADVer != error.UserSysvolVer || error.CompADVer != error.CompSysvolVer))
-                    {
-                        gpoError++;
-                    }
-                    else
-                    {
-                        gpoHealthy++;
-                    }
-                    GPOId = error.GPOId.ToString();
+                GPOId = error.GPOId.ToString();
                     
-                }
- 
-
-                viewModel.Add(new ViewModels.GPOViewModel()
-                {
-                    Domain = domain.DomainName,
-                    GPOId = GPOId,
-                    Error = gpoError,
-                    Healthy = gpoHealthy
-                });
             }
+
+            viewModel.Domain = ViewBag.Domain;
+            viewModel.GPOId = GPOId;
+            viewModel.Error = gpoError;
+            viewModel.Healthy = gpoHealthy;
 
             return PartialView("_GPChart", viewModel);
         }

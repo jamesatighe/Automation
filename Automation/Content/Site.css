@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: lightgrey;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,4 +22,247 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+ /* Clear fix to resolve div issues */
+ .clearfix:after {
+     content: "";
+     display: table;
+     clear: both;
+ }
+
+.col-centered {
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.placeholder {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-style: dashed;
+}
+
+.maxheight {
+    max-height: 600px;
+    height: 600px;
+}
+
+/* New Panel Stuff */
+
+#widgets {
+    background-color: lightgray
+}
+
+.ui-sortable .panel-heading {
+    cursor: move
+}
+
+
+.panel-title a {
+    display: block
+}
+
+.panel-title > a:focus, .panel-title > a:hover {
+    text-decoration: none
+}
+
+.panel {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: white;
+    width: 100%;
+}
+.panel.panel-no-rounded-corner .panel-body, .panel.panel-no-rounded-corner .panel-footer, .panel.panel-no-rounded-corner .panel-heading {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border: none
+}
+
+    .panel-heading + .slimScrollDiv, .panel-heading + .table, .panel-toolbar {
+        border-top: 1px solid #eee
+    }
+
+.panel-heading-btn {
+    float: right
+}
+
+    .panel-heading-btn > a {
+        margin-left: 8px
+    }
+
+.panel-heading .btn-group .btn {
+    margin-top: -7px
+}
+
+    .panel-heading .btn-group .btn.btn-sm {
+        margin-top: -5px
+    }
+
+    .panel-heading .btn-group .btn.btn-xs {
+        margin-top: -1px
+    }
+
+.panel-heading .label.pull-left, .panel-heading .label.pull-right {
+    line-height: 15px
+}
+
+.panel-title, .panel-title .pull-right {
+    line-height: 20px
+}
+
+.panel-heading .progress.pull-left, .panel-heading .progress.pull-right {
+    width: 40%;
+    min-width: 120px
+}
+
+.panel-heading + .alert {
+    margin-bottom: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0
+}
+
+.panel-with-tabs.panel-default .panel-heading {
+    background: #c1ccd1;
+    color: #333
+}
+
+.panel-footer, .panel-toolbar {
+    background: #fff
+}
+
+.panel-heading .nav-tabs {
+    margin-top: -10px;
+    margin-right: -15px
+}
+
+.panel-heading .nav-tabs > li > a {
+    padding: 10px 15px;
+    line-height: 20px
+}
+
+.panel-title {
+    font-size: 12px
+}
+
+.panel-title .accordion-toggle {
+    margin: -10px -15px;
+    padding: 10px 15px
+}
+
+.panel-title .accordion-toggle.accordion-toggle-styled .fa:before {
+    content: '\f056'
+}
+
+.panel-title .accordion-toggle.accordion-toggle-styled.collapsed .fa:before {
+    content: '\f055'
+}
+
+.panel-toolbar {
+    border-bottom: 1px solid #eee;
+    padding: 10px 15px
+}
+
+.panel-toolbar + .form-control {
+    margin: -1px 0 0;
+    border-right: none;
+    border-left: none
+    }
+
+.panel-group .panel {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px
+}
+
+.form-control + .panel-footer {
+    border-top: none
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+.panel-body.no-border {
+    border: none !important
+}
+
+.panel-body.no-padding, .panel-body.panel-form, .panel-body.panel-full-width, .panel-body.panel-table {
+   padding: 0 !important
+}
+
+.panel-body.with-table > .table {
+    border: 0;
+    margin: 0
+}
+
+.panel-default > .panel-heading + .panel-collapse .panel-body, .panel-footer {
+    border-top: 1px solid #eee
+}
+
+.panel-body.with-table > .table tr:last-child td, .panel-body.with-table > .table tr:last-child th {
+    border-bottom: 0
+}
+
+.panel .tab-content {
+    -webkit-border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px
+}
+
+.panel-default > .panel-heading {
+    background: #fafafa
+}
+
+.panel-danger > .panel-heading, .panel-info > .panel-heading, .panel-inverse > .panel-heading, .panel-primary > .panel-heading, .panel-success > .panel-heading, .panel-warning > .panel-heading {
+    color: #fff
+}
+
+.panel-inverse > .panel-heading {
+    background: #242a30
+}
+
+.panel-success > .panel-heading {
+    background: #008a8a
+}
+
+.panel-warning > .panel-heading {
+    background: #c47d15
+}
+
+.panel-danger > .panel-heading {
+    background: #cc4946
+}
+
+.panel-primary > .panel-heading {
+    background: #2a72b5
+}
+
+.panel-info > .panel-heading {
+    background: #3a92ab
+}
+
+.panel.panel-expand {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    z-index: 1080
+}
+
+.panel-expand .height-full, .panel-expand .height-lg, .panel-expand .height-md, .panel-expand .height-sm, .panel-expand .height-xs {
+    height: 100% !important
 }

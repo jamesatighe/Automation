@@ -1,46 +1,113 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
+<div class="row">
+    <div class="col-md-6 ui-sortable sortable">
+        <div class="panel panel-inverse clearfix">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">SCOM New Alerts</h4>
+            </div>
+            <div class="panel-body">
+                <div id="SCOMNewLink" class="value">
+                    @if (ViewBag.SCOMNew != null)
+                    {
+                        string SCOMNew = ViewBag.SCOMNew.ToString();
+                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
+                        <h2>New Alerts</h2>
+                    }
+                </div>
+            </div>
+        </div>
 
-
-<div class="metric" style="display: block; margin: 10px; width: 40%;">
-    <div class="metric-inner">
-        <header class="metric-header">
-            <h1 class="metric-title">Windows Auto Alerts</h1>
-        </header>
-        <div class="metric-body viz-basic">
-            <div id="SCOMNewLink" class="value">
-                @if (ViewBag.SCOMNew != null)
+        <div class="panel panel-inverse clearfix">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">SCOM Critical</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="value" id="SCOMClusterLink">
+                        <div class="cardvalue">
+                            <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                            <h2>Total</h2>
+                        </div>
+                        <div class="cardcomparison_wrapper">
+                            <div class="cardleft_comparison">
+                                <h2 class="cardsecondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
+                                <h4>Warning</h4>
+                            </div>
+                            <div class="cardright_comparison">
+                                <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
+                                <h4>Error</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 ui-sortable sortable">
+        <div class="panel panel-inverse clearfix">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">SCOM New Alerts</h4>
+            </div>
+            <div class="panel-body">
+                <div id="SCOMNewLink" class="value">
+                    @if (ViewBag.SCOMNew != null)
                 {
                     string SCOMNew = ViewBag.SCOMNew.ToString();
-                    <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
+                    <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
                     <h2>New Alerts</h2>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-<div class="metric" style="display: block; margin: 10px; width: 40%;">
-    <div class="metric-inner">
-        <header class="metric-header">
-            <h1 class="metric-title">Critical Clusters</h1>
-        </header>
-        <div class="metric-body viz-basic-with-7-and-40-day-comparison">
-            <div class="value" id="SCOMClusterLink">
-                <div class="current-value">
-                    <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
-                    <h2>Total</h2>
-                </div>
-                <div class="comparison_wrapper">
-                    <div class="left_comparison">
-                        <h2 class="secondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
-                        <h4>Warning</h4>
-                    </div>
-                    <div class="right_comparison">
-                        <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
-                        <h4>Error</h4>
-                    </div>
+            }
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
+        <div class="panel panel-inverse clearfix">
+            <div class="panel panel-inverse">
+                <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                        <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                    </div>
+                    <h4 class="panel-title">SCOM Critical</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="value" id="SCOMClusterLink">
+                        <div class="cardvalue">
+                            <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                            <h2>Total</h2>
+                        </div>
+                        <div class="cardcomparison_wrapper">
+                            <div class="cardleft_comparison">
+                                <h2 class="cardsecondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
+                                <h4>Warning</h4>
+                            </div>
+                            <div class="cardright_comparison">
+                                <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
+                                <h4>Error</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        $(".sortable").sortable({
+            connectWith: ".sortable",
+            handle: ".panel-heading",
+            scroll: false,
+            cursor: "move",
+            opacity: 0.5,
+            placeholder: "placeholder",
+            forceHelperSize: true
+        });
+
+    </script>

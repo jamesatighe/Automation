@@ -1,62 +1,70 @@
 ﻿@using System.Text
-@model IList<Automation.ViewModels.GPOViewModel>
+@model Automation.ViewModels.GPOViewModel
 
-<canvas id="chart-div">
-
-</canvas>
-
-@{ 
-    StringBuilder dataList = new StringBuilder("data: [");
-    StringBuilder labelList = new StringBuilder("labels: [");
-    StringBuilder colourList = new StringBuilder("backgroundColor: [");
-
-    var random = new Random();
-    for (var i = 0; i < Model.Count(); i++)
-    {
-        var color = String.Format("#{0:X6}", random.Next(0x1000000));
-
-        labelList.Append("\'" + Model[i].Domain + "\',");
-        dataList.Append("\'" + Model[i].Error + "\',");
-        colourList.Append("\'" + color + "\',");
-    }
-    dataList.Length--;
-    labelList.Length--;
-    dataList.Append("]");
-    labelList.Append("],");
-    colourList.Append("],");
-}
-
-
+<div class="col-lg-12 ui-sortable widgets">
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <div class="panel-heading-btn">
+                <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+            </div>
+            <h4 class="panel-title">GPO Health</h4>
+        </div>
+        <div class="panel-body">
+            <canvas id="chart-div"></canvas>
+        </div>
+    </div>
+    <div class="panel panel-inverse">
+        <div class="panel-heading">
+            <h4 class="panel-title">GPO Health</h4>
+        </div>
+        <div class="panel-body">
+            <canvas id="chart-div2"></canvas>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+    $(".widgets").sortable({
+        handle: ".panel-heading",
+        cursor: "move",
+        opacity: 0.5,
+        stop: function (event, ui) {
+            $("#json").val(
+                JSON.stringify(
+                    $("#widgets").sortable(
+                        'toArray',
+                        {
+                            attribute: 'id'
+                        }
+                    )
+                )
+            );
+        }
+    });
     var dynamicColours = function () {
         var r = Math.floor(Math.random() * 255);
         var g = Math.floor(Math.random() * 255);
         var b = Math.floor(Math.random() * 255);
         return "rgb(" + r + "," + g + "," + b + ")";
     };
-    alert(dynamicColours());
-    alert(dynamicColours());
-
-
 
     var ctx = document.getElementById('chart-div');
     var GPOPieChart = new Chart(ctx,
     {
         type: 'doughnut',
         data: {
-                @Html.Raw(labelList)
+                labels: ["Healthy","Error"],
                 datasets: [
                     {
-                        label: "GPOs",
-                        @Html.Raw(colourList)
-                        @Html.Raw(dataList)
+                        label: "GPO's",
+                        backgroundColor:["Green","Red"],
+                        data: ["@Model.Healthy","@Model.Error"]
                     }
                 ]
         },
         options: {
             title: {
                 display: true,
-                text: 'GPOs in Error (By Domain)'
+                text: "GPO Health '@Model.Domain'"
             }
         }
 });
