@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
 <div class="row">
-    <div class="col-md-6 ui-sortable sortable">
+    <div class="col-md-6 ui-sortable sortable" id="col1">
         <div class="panel panel-inverse clearfix">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
@@ -21,7 +21,6 @@
         </div>
 
         <div class="panel panel-inverse clearfix">
-            <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
                         <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -46,10 +45,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
-    <div class="col-md-6 ui-sortable sortable">
+    <div class="col-md-6 ui-sortable sortable" id="col2">
         <div class="panel panel-inverse clearfix">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
@@ -70,7 +68,6 @@
         </div>
 
         <div class="panel panel-inverse clearfix">
-            <div class="panel panel-inverse">
                 <div class="panel-heading">
                     <div class="panel-heading-btn">
                         <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -96,18 +93,38 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
     <script type="text/javascript">
-        $(".sortable").sortable({
+
+        $('#col1, #col2').sortable({
             connectWith: ".sortable",
-            handle: ".panel-heading",
-            scroll: false,
+            items: ".panel",
+            placeholder: "placeholder",
             cursor: "move",
             opacity: 0.5,
-            placeholder: "placeholder",
-            forceHelperSize: true
+            handle: ".panel-heading",
+            update: function (event, ui) {
+                var col1 = $('#col1 .panel');
+                var col2 = $('#col2 .panel');
+                balanceColumn1(col1, col2);
+                balanceColumn2(col1, col2);
+            }
         });
+
+
+        function balanceColumn1(col1, col2) {
+            if (col1.length > 3) {
+                col1.last().appendTo('#col2');
+            }
+        }
+
+        function balanceColumn2(col1, col2) {
+            if (col2.length > 3) {
+                if (col1.length < 3) {
+                    col2.first().appendTo('#col1');
+                } 
+            }
+        }
 
     </script>

@@ -31,14 +31,17 @@
   .cardcomparison_wrapper {
     width: auto;
     margin: 0px auto;
+    background-color: lightgrey
   }
-  .cardleft_comparison {
+.cardleft_comparison {
     float: left;
     width: 50%;
-  }
-  .cardright_comparison {
+    background-color: lightgrey
+}
+.cardright_comparison {
     float: right;
     width: 50%;
-  }
+    background-color: lightgrey
+}
     
   
