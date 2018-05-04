@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
 
+<div class="btn-group" role="button" aria-label="rowSize">
+    <button type="button" id="sort2" class="btn btn-info">2</button>
+    <button type="button" id="sort3" class="btn btn-info">3</button>
+    <button type="button" id="sort4" class="btn btn-info">4</button>
+</div>
+
 <div class="row">
     <div class="col ui-sortable sortable" id="col1" style="width: auto;">
         <div class="cardpanel panel-inverse clearfix">
@@ -134,56 +140,77 @@
     </div>
 </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        var noRows = 2;
+        var noRows = 3;
 
-        $('#col1, #col2, #col3').sortable({
-            connectWith: ".sortable, .widgets",
-            items: ".cardpanel",
-            placeholder: "placeholder",
-            cursor: "move",
-            opacity: 0.5,
-            handle: ".panel-heading",
-            update: function (event, ui) {
-                var col1 = $('#col1 .cardpanel');
-                var col2 = $('#col2 .cardpanel');
-                var col3 = $('#col3 .cardpanel');
-                balanceColumn1(col1, col2, col3);
-                balanceColumn2(col1, col2, col3);
-                balanceColumn3(col1, col2, col3);
-            }
-        });
+        $('#sort2').click(function () {
+            noRows = 2;
+        })
+        $('#sort3').click(function () {
+            noRows = 3;
+        })
+        $('#sort4').click(function () {
+            noRows = 4;
+        })
 
 
-        function balanceColumn1(col1, col2, col3) {
-            if (col1.length > noRows) {
-                if (col2.length < noRows) {
-                    col1.first().appendTo('#col2');
-                } else if (col2.length > noRows) {
-                    col1.first().appendTo('#col3');
-                }
-            } 
+
+
+    $('#col1, #col2, #col3').sortable({
+        connectWith: ".sortable, .widgets",
+        items: ".cardpanel",
+        placeholder: "placeholder",
+        cursor: "move",
+        opacity: 0.5,
+        handle: ".panel-heading",
+        update: function (event, ui) {
+            var col1 = $('#col1 .cardpanel');
+            var col2 = $('#col2 .cardpanel');
+            var col3 = $('#col3 .cardpanel');
+            balanceColumn1(col1, col2, col3);
+            balanceColumn2(col1, col2, col3);
+            balanceColumn3(col1, col2, col3);
         }
+    });
 
-        function balanceColumn2(col1, col2, col3) {
-            if (col2.length > noRows) {
-                if (col1.length < noRows) {
-                    col2.first().appendTo('#col1');
-                } else if (col1.length > noRows) {
-                    col2.first().appendTo('#col3');
-                }
-            }
-        }
 
-        function balanceColumn3(col1, col2, col3) {
-            if (col3.length > noRows) {
-                if (col2.length < noRows) {
-                    col3.first().appendTo('#col2');
-                } else if (col2.length > noRows) {
-                    col3.first().appendTo('#col1');
-                }
+    function balanceColumn1(col1, col2, col3) {
+        if (col1.length > noRows) {
+            if (col2.length < noRows) {
+                col1.first().appendTo('#col2');
+            } else if (col2.length > noRows) {
+                col1.first().appendTo('#col3');
             }
         }
+    }
 
-    </script>
+    function balanceColumn2(col1, col2, col3) {
+        if (col2.length > noRows) {
+            if (col1.length < noRows) {
+                col2.first().appendTo('#col1');
+            } else if (col1.length > noRows) {
+                col2.first().appendTo('#col3');
+            }
+        }
+    }
+
+    function balanceColumn3(col1, col2, col3) {
+        if (col3.length > noRows) {
+            if (col2.length < noRows) {
+                col3.first().appendTo('#col2');
+            } else if (col2.length > noRows) {
+                col3.first().appendTo('#col1');
+            }
+        }
+    }
+
+    //by bobince - http://stackoverflow.com/a/698440/2033671
+    function swapNodes(a, b) {
+        var aparent = a.parentNode;
+        var asibling = a.nextSibling === b ? a : a.nextSibling;
+        b.parentNode.insertBefore(a, b);
+        aparent.insertBefore(b, asibling);
+    }
+
+</script>
