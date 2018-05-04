@@ -72,6 +72,52 @@ namespace Automation.Controllers
             return PartialView("_GPChart", viewModel);
         }
 
+        public async Task<PartialViewResult> ADServiceHealth(string DomainChoice)
+        {
+            ViewBag.DomainList = new SelectList(db.AD.GroupBy(a => a.Domain).ToList());
+
+            List<AD> ad = await db.AD.ToListAsync();
+            if (ViewBag.DomainChoice == null)
+            {
+                var domains = ad.GroupBy(x => x.Domain).Select(a => a.FirstOrDefault());
+                ViewBag.DomainChoice = domains.FirstOrDefault().Domain;
+            }
+            else
+            {
+                ViewBag.DomainChoice = DomainChoice;
+            }
+            var domain = await ad.Where(a => a.Domain == ViewBag.DomainChoice).ToListAsync();
+            var viewModel = new List<ADServiceHealthViewModel>();
+    
+
+            foreach (var item in domain)
+            {
+                var serviceErrors = 0;
+
+                if (item.KDCSvc != "Running")
+                    serviceErrors++;
+                if (item.NetLogonSvc != "Running")
+                    serviceErrors++;
+                if (item.NTDSSvc != "Running")
+                    serviceErrors++;
+                if (item.W32TimeSvc != "Running")
+                    serviceErrors++;
+                if (item.DNSSvc != "Running")
+                    serviceErrors++;
+                if (item.DFSRSvc != "Running")
+                    serviceErrors++;
+
+                viewModel.Add(new ADServiceHealthViewModel()
+                {
+                    Domain = item.Domain,
+                    DomainController = item.DomainController,
+                    ServiceErrors = serviceErrors
+                });
+            }
+
+            return PartialView("_ADServiceHealth", viewModel);
+        }
+
         // GET: AD/Details/5
         public ActionResult Details(int id)
         {

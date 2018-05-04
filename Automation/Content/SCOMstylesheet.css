@@ -25,6 +25,17 @@
     text-align: center;
   }
 
+.cardvalue-left {
+    text-align: left;
+}
+
+.cardvalue-right {
+    text-align: right;
+}
+
+.cardvalue-center {
+    text-align: center;
+}
   .cardvalue {
     text-align: center;
   }

@@ -1,7 +1,101 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
+
 <div class="row">
-    <div class="col-md-6 ui-sortable sortable" id="col1">
-        <div class="panel panel-inverse clearfix">
+    <div class="col ui-sortable sortable" id="col1" style="width: auto;">
+        <div class="cardpanel panel-inverse clearfix">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus-circle"></i></a>
+                </div>
+                <h4 class="panel-title">SCOM New Alerts</h4>
+            </div>
+            <div class="panel-body">
+                <div id="SCOMNewLink" class="value">
+                    @if (ViewBag.SCOMNew != null)
+                    {
+                        string SCOMNew = ViewBag.SCOMNew.ToString();
+                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
+                        <h2>New Alerts</h2>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="cardpanel panel-inverse clearfix">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">SCOM Critical</h4>
+            </div>
+            <div class="panel-body">
+                <div class="value" id="SCOMClusterLink">
+                    <div class="cardvalue">
+                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                        <h2>Total</h2>
+                    </div>
+                    <div class="cardcomparison_wrapper clearfix">
+                        <div class="cardleft_comparison">
+                            <div class="cardvalue-left">
+                                <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
+                                    <i class="fas fa-exclamation-triangle" style="color: orange;"></i>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="cardright_comparison">
+                            <div class="cardvalue-right">
+                                <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
+                                    <i class="fas fa-exclamation-circle" style="color:red;"></i>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").ToList().Count().ToString()</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col ui-sortable sortable" id="col2" style="width: auto;">
+        <div class="cardpanel panel-inverse clearfix">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
+                </div>
+                <h4 class="panel-title">SCOM Critical</h4>
+            </div>
+            <div class="panel-body">
+                <div class="value" id="SCOMClusterLink">
+                    <div class="cardvalue">
+                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                        <h2>Total</h2>
+                    </div>
+                    <div class="cardcomparison_wrapper clearfix">
+                        <div class="cardleft_comparison">
+                            <div class="cardvalue-left">
+                                <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
+                                    <i class="fas fa-exclamation-triangle" style="color: orange;"></i>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="cardright_comparison">
+                            <div class="cardvalue-right">
+                                <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
+                                    <i class="fas fa-exclamation-circle" style="color:red;"></i>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").ToList().Count().ToString()</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col ui-sortable sortable" id="col3" style="width: auto;">
+        <div class="cardpanel panel-inverse clearfix">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -19,36 +113,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="panel panel-inverse clearfix">
-                <div class="panel-heading">
-                    <div class="panel-heading-btn">
-                        <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
-                    </div>
-                    <h4 class="panel-title">SCOM Critical</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="value" id="SCOMClusterLink">
-                        <div class="cardvalue">
-                            <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
-                            <h2>Total</h2>
-                        </div>
-                        <div class="cardcomparison_wrapper">
-                            <div class="cardleft_comparison">
-                                <h2 class="cardsecondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
-                                <h4>Warning</h4>
-                            </div>
-                            <div class="cardright_comparison">
-                                <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
-                                <h4>Error</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>
-    </div>
-    <div class="col-md-6 ui-sortable sortable" id="col2">
-        <div class="panel panel-inverse clearfix">
+        <div class="cardpanel panel-inverse clearfix">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -58,72 +123,66 @@
             <div class="panel-body">
                 <div id="SCOMNewLink" class="value">
                     @if (ViewBag.SCOMNew != null)
-                {
-                    string SCOMNew = ViewBag.SCOMNew.ToString();
-                    <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
-                    <h2>New Alerts</h2>
-            }
+                    {
+                        string SCOMNew = ViewBag.SCOMNew.ToString();
+                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
+                        <h2>New Alerts</h2>
+                    }
                 </div>
             </div>
         </div>
-
-        <div class="panel panel-inverse clearfix">
-                <div class="panel-heading">
-                    <div class="panel-heading-btn">
-                        <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
-                    </div>
-                    <h4 class="panel-title">SCOM Critical</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="value" id="SCOMClusterLink">
-                        <div class="cardvalue">
-                            <h1 class="primary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
-                            <h2>Total</h2>
-                        </div>
-                        <div class="cardcomparison_wrapper">
-                            <div class="cardleft_comparison">
-                                <h2 class="cardsecondary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</h2>
-                                <h4>Warning</h4>
-                            </div>
-                            <div class="cardright_comparison">
-                                <h2 class="primary-value">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").Count().ToString()</h2>
-                                <h4>Error</h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
     </div>
 </div>
+
     <script type="text/javascript">
 
-        $('#col1, #col2').sortable({
-            connectWith: ".sortable",
-            items: ".panel",
+        var noRows = 2;
+
+        $('#col1, #col2, #col3').sortable({
+            connectWith: ".sortable, .widgets",
+            items: ".cardpanel",
             placeholder: "placeholder",
             cursor: "move",
             opacity: 0.5,
             handle: ".panel-heading",
             update: function (event, ui) {
-                var col1 = $('#col1 .panel');
-                var col2 = $('#col2 .panel');
-                balanceColumn1(col1, col2);
-                balanceColumn2(col1, col2);
+                var col1 = $('#col1 .cardpanel');
+                var col2 = $('#col2 .cardpanel');
+                var col3 = $('#col3 .cardpanel');
+                balanceColumn1(col1, col2, col3);
+                balanceColumn2(col1, col2, col3);
+                balanceColumn3(col1, col2, col3);
             }
         });
 
 
-        function balanceColumn1(col1, col2) {
-            if (col1.length > 3) {
-                col1.last().appendTo('#col2');
+        function balanceColumn1(col1, col2, col3) {
+            if (col1.length > noRows) {
+                if (col2.length < noRows) {
+                    col1.first().appendTo('#col2');
+                } else if (col2.length > noRows) {
+                    col1.first().appendTo('#col3');
+                }
+            } 
+        }
+
+        function balanceColumn2(col1, col2, col3) {
+            if (col2.length > noRows) {
+                if (col1.length < noRows) {
+                    col2.first().appendTo('#col1');
+                } else if (col1.length > noRows) {
+                    col2.first().appendTo('#col3');
+                }
             }
         }
 
-        function balanceColumn2(col1, col2) {
-            if (col2.length > 3) {
-                if (col1.length < 3) {
-                    col2.first().appendTo('#col1');
-                } 
+        function balanceColumn3(col1, col2, col3) {
+            if (col3.length > noRows) {
+                if (col2.length < noRows) {
+                    col3.first().appendTo('#col2');
+                } else if (col2.length > noRows) {
+                    col3.first().appendTo('#col1');
+                }
             }
         }
 

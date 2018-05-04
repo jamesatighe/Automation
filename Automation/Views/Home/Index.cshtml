@@ -2,10 +2,6 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>SSE WININF - Monitoring and Automation Site</h1>
-</div>
-
 <div id="SCOMNewModal" class="modal fade">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -25,57 +21,27 @@
         </div>
     </div>
 </div>
-<div class="row col-centered">
-    <div class="col-md-12">
-        <h2>Welcome to the SSE WinInf Monitoring and Automation Site</h2>
-        <p>
-            This site has been designed to assist in monitoring of the estate, and running of standardised PowerShell scripts. The hope is this will reduce mistakes and allow code to be run efficiently.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-
-    <div class="row col-centered">
-        <div class="col-lg-4 col-md-6 col-sm-12 maxheight" style="display: table">
-            <h3><img src="~/Images/scom.png" style="height: 100px; margin: 5px"><span style="vertical-align: top">SCOM Monitoring </span></h3>
-            <div id="SCOMPartial" style="display: table">
-                Loading . . .
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12" style="display: table">
-            <h3><img src="~/Images/PowerShell.png" style="height: 100px; margin: 5px"><span style="vertical-align: top">PowerShell Scripts</span></h3>
-            <div id="PSPartial" style="display: table">
-                Loading. . .
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12" style="display: table">
-            <h2><img src="~/Images/AD.jpg" style="height: 100px; margin: 5px"><span style="vertical-align: top">AD GPOs</span></h2>
-            <div id="GPOPartial" style="display: table">
-                Loading. . .
-            </div>
+<div class="row col-centered" style="margin-top: 100px;">
+    <div class="col-lg-6 col-md-6 col-sm-12 maxheight" style="display: table">
+        <div id="SCOMPartial" style="display: table">
+            Loading . . .
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12" style="display: table">
-            <h3><img src="~/Images/AD.jpg" style="height: 100px; margin: 5px"><span style="vertical-align: top">AD Monitoring </span></h3>
-            <div id="ADPartial" style="display: table">
-                Loading . . .
-            </div>
+    <div class="col-lg-6 col-md-6 col-sm-12" style="display: table">
+        <div id="GPOPartial" style="display: table">
+            Loading. . .
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script type='text/javascript'>
 
         $(document).ready(function () {
             $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM');
-            $('#PSPartial').load('/PowerShell/GetPSPartial');
-            //$('#GPOPartial').load('/AD/GPOChart');
-            $('#ADPartial').load('/AD/Index');
-
+            $('#GPOPartial').load('/AD/GPOChart', function () {
+                $(this).find(".widgets").append($('<div class="row">').load('/AD/ADServiceHealth'));
+            });
         });
-
-
 
         $(function () {
             setInterval(function () {
