@@ -2,16 +2,16 @@
 
 @model IEnumerable<Automation.ViewModels.ADServiceHealthViewModel>
 
-<div class="cardpanel bargraph panel-inverse">
+<div class="cardpanel bargraph panel-inverse clearfix resizable-bar">
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
         </div>
-        <h4 class="panel-title">GPO Health</h4>
+        <h4 class="panel-title">AD Health</h4>
     </div>
     <div class="panel-body">
-        <div class="chart-container" style="position: relative; height: 100%; width: 100%">
-            <canvas id='ADServiceHealthDiv' style="width: 100%;"></canvas>
+        <div class="chart-container" style="position: relative;">
+            <canvas id='ADServiceHealthDiv'></canvas>
         </div>
     </div>
 </div>
@@ -34,15 +34,15 @@
 }
 
 <script type="text/javascript">
-    $(".widgets").sortable({
-        handle: ".panel-heading",
-        cursor: "move",
-        connectWith: ".sortable",
-        items: ".cardpanel",
-        opacity: 0.5,
+
+    $('.resizable-bar').each(function () {
+        $(this).resizable({
+            ghost: true,
+            minWidth: 600,
+            minHeight: 400,
+            animate: true
+        });
     });
-
-
 
 
     var dynamicColours = function () {

@@ -4,7 +4,7 @@
   .red {
     color: #bc2929 !important;
   }
-  .cardprimary-value {
+.cardprimary-value {
     color: #f10e0e;
     font-family: Helvetica;
     font-weight: 300;
@@ -13,7 +13,7 @@
     padding: 0;
     text-align: center;
     font-weight: bold;
-  }
+}
 
   .cardsecondary-value {
     color: #e05d05;

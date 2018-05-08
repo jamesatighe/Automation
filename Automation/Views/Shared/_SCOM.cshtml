@@ -1,14 +1,8 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
 
-<div class="btn-group" role="button" aria-label="rowSize">
-    <button type="button" id="sort2" class="btn btn-info">2</button>
-    <button type="button" id="sort3" class="btn btn-info">3</button>
-    <button type="button" id="sort4" class="btn btn-info">4</button>
-</div>
-
-<div class="row">
-    <div class="col ui-sortable sortable" id="col1" style="width: auto;">
-        <div class="cardpanel panel-inverse clearfix">
+<div class="ui-sortable sortable" >
+    <div class="row">
+        <div class="cardpanel panel-inverse clearfix resizable-card">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus-circle"></i></a>
@@ -20,14 +14,14 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
+                        <p class="cardprimary-value p" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
                         <h2>New Alerts</h2>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="cardpanel panel-inverse clearfix">
+        <div class="cardpanel panel-inverse clearfix resizable-card">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -61,10 +55,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col ui-sortable sortable" id="col2" style="width: auto;">
-        <div class="cardpanel panel-inverse clearfix">
+
+        <div class="cardpanel panel-inverse clearfix resizable-card">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -98,10 +91,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col ui-sortable sortable" id="col3" style="width: auto;">
-        <div class="cardpanel panel-inverse clearfix">
+        <div class="cardpanel panel-inverse clearfix resizable-card">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -119,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="cardpanel panel-inverse clearfix">
+        <div class="cardpanel panel-inverse clearfix resizable-card">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -140,77 +131,80 @@
     </div>
 </div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-        var noRows = 3;
+        $('.sortable').sortable({
+            connectWith: ".sortable, .widgets",
+            items: ".cardpanel",
+            placeholder: "placeholder",
+            cursor: "move",
+            opacity: 0.5,
+            handle: ".panel-heading",
+        });
 
-        $('#sort2').click(function () {
-            noRows = 2;
-        })
-        $('#sort3').click(function () {
-            noRows = 3;
-        })
-        $('#sort4').click(function () {
-            noRows = 4;
-        })
+        $('.resizable-card').each(function () {
+            var mainWidth = parseInt($(this).css('width'));
+            var mainHeight = parseInt($(this).css('height'));
+            $(this).resizable({
+                ghost: true,
+                minWidth: 200,
+                minHeight: 255,
+                resize: function (e, ui) {
+                    var width = parseInt($(this).find('p').css('width'));
+                    var height = parseInt($(this).find('p').css('height'));
+                    if (width <= mainWidth && height <= mainHeight) {
+                        var textSize = parseInt($(this).find('p').css('font-size'));
+                        $(this).find('p').css({
+                            'font-size': (textSize + 1) + 'px'
+                        });
+                    }
+                    else {
+                        var textSize = parseInt($(this).find('p').css('font-size'));
+                        $(this).find('p').css({
+                            'font-size': (textSize - 1) + 'px'
+                        });
+                    }
+                }
+            });
+        });
 
-
-
-
-    $('#col1, #col2, #col3').sortable({
-        connectWith: ".sortable, .widgets",
-        items: ".cardpanel",
-        placeholder: "placeholder",
-        cursor: "move",
-        opacity: 0.5,
-        handle: ".panel-heading",
-        update: function (event, ui) {
-            var col1 = $('#col1 .cardpanel');
-            var col2 = $('#col2 .cardpanel');
-            var col3 = $('#col3 .cardpanel');
-            balanceColumn1(col1, col2, col3);
-            balanceColumn2(col1, col2, col3);
-            balanceColumn3(col1, col2, col3);
-        }
-    });
-
-
-    function balanceColumn1(col1, col2, col3) {
-        if (col1.length > noRows) {
-            if (col2.length < noRows) {
-                col1.first().appendTo('#col2');
-            } else if (col2.length > noRows) {
-                col1.first().appendTo('#col3');
+      
+        function balanceColumn1(col1, col2, col3) {
+            if (col1.length > noRows) {
+                if (col2.length < noRows) {
+                    col1.first().appendTo('#col2');
+                } else if (col2.length > noRows) {
+                    col1.first().appendTo('#col3');
+                }
             }
         }
-    }
 
-    function balanceColumn2(col1, col2, col3) {
-        if (col2.length > noRows) {
-            if (col1.length < noRows) {
-                col2.first().appendTo('#col1');
-            } else if (col1.length > noRows) {
-                col2.first().appendTo('#col3');
+        function balanceColumn2(col1, col2, col3) {
+            if (col2.length > noRows) {
+                if (col1.length < noRows) {
+                    col2.first().appendTo('#col1');
+                } else if (col1.length > noRows) {
+                    col2.first().appendTo('#col3');
+                }
             }
         }
-    }
 
-    function balanceColumn3(col1, col2, col3) {
-        if (col3.length > noRows) {
-            if (col2.length < noRows) {
-                col3.first().appendTo('#col2');
-            } else if (col2.length > noRows) {
-                col3.first().appendTo('#col1');
+        function balanceColumn3(col1, col2, col3) {
+            if (col3.length > noRows) {
+                if (col2.length < noRows) {
+                    col3.first().appendTo('#col2');
+                } else if (col2.length > noRows) {
+                    col3.first().appendTo('#col1');
+                }
             }
         }
-    }
 
-    //by bobince - http://stackoverflow.com/a/698440/2033671
-    function swapNodes(a, b) {
-        var aparent = a.parentNode;
-        var asibling = a.nextSibling === b ? a : a.nextSibling;
-        b.parentNode.insertBefore(a, b);
-        aparent.insertBefore(b, asibling);
-    }
+        //by bobince - http://stackoverflow.com/a/698440/2033671
+        function swapNodes(a, b) {
+            var aparent = a.parentNode;
+            var asibling = a.nextSibling === b ? a : a.nextSibling;
+            b.parentNode.insertBefore(a, b);
+            aparent.insertBefore(b, asibling);
+        }
 
-</script>
+    </script>

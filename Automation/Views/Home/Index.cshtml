@@ -22,25 +22,30 @@
     </div>
 </div>
 <div class="row col-centered" style="margin-top: 100px;">
-    <div class="col-lg-6 col-md-6 col-sm-12 maxheight" style="display: table">
+    <div class="col-lg-12 col-md-12 col-sm-12 maxheight" style="display: table">
+
         <div id="SCOMPartial" style="display: table">
             Loading . . .
         </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12" style="display: table">
-        <div id="GPOPartial" style="display: table">
+
+        @*<div id="GPOPartial" style="display: table">
             Loading. . .
-        </div>
+        </div>*@
     </div>
 </div>
 @section Scripts {
     <script type='text/javascript'>
 
         $(document).ready(function () {
-            $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM');
-            $('#GPOPartial').load('/AD/GPOChart', function () {
-                $(this).find(".widgets").append($('<div class="row">').load('/AD/ADServiceHealth'));
+            $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM', function () {
+                $(this).find('.sortable').append($('<div>').load('/AD/ADServiceHealth'));
             });
+
+            //$('#GPOPartial').load('/AD/GPOChart', function () {
+            //    $(this).find(".widgets").append($('<div class="row">').load('/AD/ADServiceHealth'));
+            //});
+
+
         });
 
         $(function () {
