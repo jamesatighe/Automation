@@ -442,6 +442,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ADController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PowerShellController.cs" />
@@ -501,6 +502,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AD.cs" />
     <Compile Include="Models\GPO.cs" />
+    <Compile Include="Models\LogOnModel.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\PowerShell.cs" />
     <Compile Include="Models\SCOM.cs" />
@@ -627,6 +629,8 @@
     <Content Include="Views\Shared\_AD.cshtml" />
     <Content Include="Views\Shared\_GPChart.cshtml" />
     <Content Include="Views\Shared\_ADServiceHealth.cshtml" />
+    <Content Include="Views\Account\LogOn.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

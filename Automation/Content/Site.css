@@ -161,7 +161,7 @@ textarea {
     border-radius: 3px;
     background-color: lightgrey;
     height: 255px;
-    max-height: 300px;
+    /*max-height: 300px;*/
     width: 200px;
 }
 
@@ -297,7 +297,7 @@ textarea {
 .panel-body {
     padding: 15px;
     background-color: lightgrey;
-    height: auto;
+    height: 75%;
 }
 
 .panel-body.no-border {

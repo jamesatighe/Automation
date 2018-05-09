@@ -1,0 +1,37 @@
+﻿@model Automation.Models.LogOnModel
+
+@{
+                /**/
+
+                ViewBag.Title = "LogOn";
+                Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("LogOn", "Account", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+
+    <h2>LogOn</h2>
+
+    <div class="form">
+        <h1>Login</h1>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.UserName, htmlAttributes: new { @class = "control-label" }):  </td>
+                <td>@Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "form-control" } })  </td>
+                <td>@Html.ValidationMessageFor(m => m.Password, "Must enter User Name", new { @class = "text-danger" })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Password, htmlAttributes: new { @class = "control-label" })</td>
+                <td>@Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control" } })</td>
+                <td>@Html.ValidationMessageFor(m => m.Password, "Must enter Password", new { @class = "text-danger" })</td>
+            </tr>
+        </table>
+       
+        <div>
+            <input type="submit" class="btn btn-success" value="Login" />
+        </div>
+    </div>
+
+}

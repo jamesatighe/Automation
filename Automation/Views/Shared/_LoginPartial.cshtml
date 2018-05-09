@@ -1,0 +1,16 @@
+﻿@using System.Security.Principal
+
+@if (User.Identity.IsAuthenticated)
+{
+<ul class="nav navbar-nav navbar-right">
+    <li class="navbar-text">Hello @User.Identity.Name!</li>
+    <li>@Html.ActionLink("Sign Out", "LogOff", "Account", null, htmlAttributes: new { @class = "btn btn-danger btn-sm"})</li>
+</ul>
+}
+else
+{
+<ul class="nav navbar-nav navbar-right">
+    <li>@Html.ActionLink("Sign In", "LogOn", "Account", null, htmlAttributes: new { @class = "btn btn-success btn-sm" })</li>
+</ul>
+}
+

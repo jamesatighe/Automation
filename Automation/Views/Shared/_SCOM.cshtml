@@ -31,7 +31,7 @@
             <div class="panel-body">
                 <div class="value" id="SCOMClusterLink">
                     <div class="cardvalue">
-                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</p>
                         <h2>Total</h2>
                     </div>
                     <div class="cardcomparison_wrapper clearfix">
@@ -67,7 +67,7 @@
             <div class="panel-body">
                 <div class="value" id="SCOMClusterLink">
                     <div class="cardvalue">
-                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</h1>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</p>
                         <h2>Total</h2>
                     </div>
                     <div class="cardcomparison_wrapper clearfix">
@@ -104,8 +104,8 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
-                        <h2>New Alerts</h2>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
+                        <p>New Alerts</p>
                     }
                 </div>
             </div>
@@ -122,8 +122,8 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <h1 class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</h1>
-                        <h2>New Alerts</h2>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
+                        <p>New Alerts</p>
                     }
                 </div>
             </div>
@@ -142,31 +142,32 @@
             handle: ".panel-heading",
         });
 
-        $('.resizable-card').each(function () {
-            var mainWidth = parseInt($(this).css('width'));
-            var mainHeight = parseInt($(this).css('height'));
-            $(this).resizable({
+        var initDiagonal;
+        var initFontSize;
+
+        $('.resizable-card').resizable({
                 ghost: true,
                 minWidth: 200,
                 minHeight: 255,
+                alsoResize: $(this).find('p'),
+                
+                create: function (event, ui) {
+                    initDiagonal = getContentDiagonal($(this));
+                    initFontSize = parseInt($(this).find('p').css("font-size"));
+                },
                 resize: function (e, ui) {
-                    var width = parseInt($(this).find('p').css('width'));
-                    var height = parseInt($(this).find('p').css('height'));
-                    if (width <= mainWidth && height <= mainHeight) {
-                        var textSize = parseInt($(this).find('p').css('font-size'));
-                        $(this).find('p').css({
-                            'font-size': (textSize + 1) + 'px'
-                        });
-                    }
-                    else {
-                        var textSize = parseInt($(this).find('p').css('font-size'));
-                        $(this).find('p').css({
-                            'font-size': (textSize - 1) + 'px'
-                        });
-                    }
-                }
+                    var newDiagonal = getContentDiagonal($(this));
+                    var ratio = newDiagonal / initDiagonal;
+                    $(this).find('p').css("font-size", initFontSize + ratio * 3);
+                    
+                  }
             });
-        });
+
+        function getContentDiagonal(element) {
+            var contentWidth = $(element).width();
+            var contentHeight = $(element).height();
+            return contentWidth * contentWidth + contentHeight * contentHeight;
+        }
 
       
         function balanceColumn1(col1, col2, col3) {
