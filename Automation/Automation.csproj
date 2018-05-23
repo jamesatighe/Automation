@@ -499,6 +499,10 @@
     <Compile Include="Migrations\201804251408373_dateunnullable.Designer.cs">
       <DependentUpon>201804251408373_dateunnullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805221432014_repgroup.cs" />
+    <Compile Include="Migrations\201805221432014_repgroup.Designer.cs">
+      <DependentUpon>201805221432014_repgroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AD.cs" />
     <Compile Include="Models\GPO.cs" />
@@ -567,6 +571,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.fittext.js" />
     <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.tablesorter.js" />
     <Content Include="Scripts\popper-utils.js" />
@@ -631,6 +637,7 @@
     <Content Include="Views\Shared\_ADServiceHealth.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\PowerShell\ADCreation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -678,6 +685,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804251408373_dateunnullable.resx">
       <DependentUpon>201804251408373_dateunnullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805221432014_repgroup.resx">
+      <DependentUpon>201805221432014_repgroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

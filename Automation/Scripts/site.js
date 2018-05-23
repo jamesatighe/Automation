@@ -6,8 +6,8 @@ $(document).on("click", "[data-click=panel-collapse]", function (a) {
     var ctx = $(this).closest(".cardpanel");
     if (ctx.find(".panel-body").css('display') == 'none') {
         if (ctx.hasClass("pieChart") || ctx.hasClass("barChart")) {
- 
-            a.preventDefault(), ctx.find(".panel-body").slideToggle()
+            ctx.css("height", "400px !important");
+            a.preventDefault(), ctx.find('.panel-body').slideToggle()
         }
         else {
             ctx.animate({ height: '255' });
@@ -15,8 +15,15 @@ $(document).on("click", "[data-click=panel-collapse]", function (a) {
         }
     }
     else {
-        a.preventDefault(), ctx.find(".panel-body").slideToggle()
-        ctx.animate({ height: '70' });
+        if (ctx.hasClass("pieChart") || ctx.hasClass("barChart")) {
+            ctx.css("min-height", "70px !important");
+            a.preventDefault(), ctx.find('.panel-body').slideToggle()
+            ctx.animate({ height: '70' });
+        }
+        else {
+            a.preventDefault(), ctx.find(".panel-body").slideToggle()
+            ctx.animate({ height: '70' });
+        }
     }
 
 });

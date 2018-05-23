@@ -9,6 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using Automation.DAL;
 using Automation.Models;
+using System.Collections.ObjectModel;
+using System.Management.Automation.Runspaces;
+using System.Management.Automation;
+using System.Text;
 
 namespace Automation.Controllers
 {
@@ -22,6 +26,74 @@ namespace Automation.Controllers
             return View(await db.PowerShell.ToListAsync());
         }
 
+
+        // GET: ADCreation
+        public ActionResult ADCreation(string Results, string FirstName, string LastName)
+        {
+            ViewBag.Results = Results;
+            ViewBag.FirstName = FirstName;
+            ViewBag.LastName = LastName;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ADCreationPost(string LastName, string FirstName, bool? Admin, bool? Domain)
+        {
+            Runspace runspace = RunspaceFactory.CreateRunspace();
+
+            //Open runspace
+            runspace.Open();
+
+            //Create Pipeline
+            Pipeline pipeline = runspace.CreatePipeline();
+
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("Import-Module ActiveDirectory");
+            if (Admin == true && Domain == true)
+            {
+                script.AppendLine("Get-ADUSer -filter 'surname -like \"" + LastName + "\" -and givenName -like \"" + FirstName + "\" -and (Name -like \"*adm*\" -or Name -like \"*dom*\")'");
+            }
+            else if (Admin == true && (Domain == false || Domain == null))
+            {
+                script.AppendLine("Get-ADUSer -filter 'surname -like \"" + LastName + "\" -and givenName -like \"" + FirstName + "\" -and Name -like \"*adm*\"'");
+            }
+            else if ((Admin == false || Admin == null) && Domain == true)
+            {
+                script.AppendLine("Get-ADUSer -filter 'surname -like \"" + LastName + "\" -and givenName -like \"" + FirstName + "\" -and Name -like \"*dom*\"'");
+            }
+            else
+            {
+                script.AppendLine("Get-ADUSer -filter 'surname -like \"" + LastName + "\" -and givenName -like \"" + FirstName + "\"'");
+            }
+
+            var scripttext = script.ToString();
+            pipeline.Commands.AddScript(scripttext);
+
+            //Execute Script
+            Collection<PSObject> results = pipeline.Invoke();
+
+            if (results.Count > 0)
+            {
+                var builder = new StringBuilder();
+
+                foreach (var PSObject in results)
+                {
+                    builder.Append(PSObject.BaseObject.ToString() + "\r\n");
+                }
+
+                ViewBag.Results = Server.HtmlEncode(builder.ToString());
+
+            }
+            ViewBag.FirstName = FirstName;
+            ViewBag.LastName = LastName;
+            //Close runspace
+            runspace.Close();
+
+            //After completed redirect to Index page
+            return RedirectToAction("ADCreation", new { Results = ViewBag.Results, FirstName = ViewBag.FirstName, LastName = ViewBag.LastName });
+        }
+
         // GET: PowerShell/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -29,7 +101,7 @@ namespace Automation.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PowerShell powerShell = await db.PowerShell.FindAsync(id);
+            Models.PowerShell powerShell = await db.PowerShell.FindAsync(id);
             if (powerShell == null)
             {
                 return HttpNotFound();
@@ -48,7 +120,7 @@ namespace Automation.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,ScriptName,ScriptContent,CreatedDate,LastRunDate")] PowerShell powerShell)
+        public async Task<ActionResult> Create([Bind(Include = "ID,ScriptName,ScriptContent,CreatedDate,LastRunDate")] Models.PowerShell powerShell)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +139,7 @@ namespace Automation.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PowerShell powerShell = await db.PowerShell.FindAsync(id);
+            Models.PowerShell powerShell = await db.PowerShell.FindAsync(id);
             if (powerShell == null)
             {
                 return HttpNotFound();
@@ -80,7 +152,7 @@ namespace Automation.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,ScriptName,ScriptContent,CreatedDate,LastRunDate")] PowerShell powerShell)
+        public async Task<ActionResult> Edit([Bind(Include = "ID,ScriptName,ScriptContent,CreatedDate,LastRunDate")] Models.PowerShell powerShell)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +170,7 @@ namespace Automation.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PowerShell powerShell = await db.PowerShell.FindAsync(id);
+            Models.PowerShell powerShell = await db.PowerShell.FindAsync(id);
             if (powerShell == null)
             {
                 return HttpNotFound();
@@ -111,7 +183,7 @@ namespace Automation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            PowerShell powerShell = await db.PowerShell.FindAsync(id);
+            Models.PowerShell powerShell = await db.PowerShell.FindAsync(id);
             db.PowerShell.Remove(powerShell);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -121,7 +193,7 @@ namespace Automation.Controllers
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
         public async Task<ActionResult> GetPSPartial()
         {
-            List<PowerShell> powerShell = await db.PowerShell.ToListAsync();
+            List<Models.PowerShell> powerShell = await db.PowerShell.ToListAsync();
             return PartialView("_PowerShell", powerShell);
         }
 

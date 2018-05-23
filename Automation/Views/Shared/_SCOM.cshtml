@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Automation.Models.SCOM>
 
-<div class="ui-sortable sortable" >
+<div class="sortable" id="sortable" >
     <div class="row">
-        <div class="cardpanel panel-inverse clearfix resizable-card">
+        <div class="cardpanel panel-inverse clearfix resizable-card ui-sortable">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus-circle"></i></a>
@@ -14,14 +14,16 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <p class="cardprimary-value p" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
-                        <h2>New Alerts</h2>
+                    <p class="cardprimary-value p" data-toggle="modal" data-target="#SCOMNewModal">
+                        @ViewBag.SCOMNew
+                            <h2 class="text-center">New Alerts</h2>
+                    </p>
                     }
                 </div>
             </div>
         </div>
 
-        <div class="cardpanel panel-inverse clearfix resizable-card">
+        <div class="cardpanel panel-inverse clearfix resizable-card ui-sortable">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -31,8 +33,10 @@
             <div class="panel-body">
                 <div class="value" id="SCOMClusterLink">
                     <div class="cardvalue">
-                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</p>
-                        <h2>Total</h2>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">
+                            @Model.Where(m => m.Cluster == true).Count().ToString()
+                            <h2 class="text-center">Total</h2>
+                        </p>
                     </div>
                     <div class="cardcomparison_wrapper clearfix">
                         <div class="cardleft_comparison">
@@ -57,25 +61,27 @@
         </div>
 
 
-        <div class="cardpanel panel-inverse clearfix resizable-card">
+        <div class="cardpanel panel-inverse clearfix resizable-card ui-sortable">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
                 </div>
-                <h4 class="panel-title">SCOM Critical</h4>
+                <h4 class="panel-title">DFS Replication Groups</h4>
             </div>
             <div class="panel-body">
-                <div class="value" id="SCOMClusterLink">
+                <div class="value" id="SCOMRepGroup">
                     <div class="cardvalue">
-                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@Model.Count().ToString()</p>
-                        <h2>Total</h2>
+                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">
+                            @Model.Where(m => m.RepGroup == true).Count().ToString()
+                            <h2 class="text-center">Total</h2>
+                        </p>
                     </div>
                     <div class="cardcomparison_wrapper clearfix">
                         <div class="cardleft_comparison">
                             <div class="cardvalue-left">
                                 <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
                                     <i class="fas fa-exclamation-triangle" style="color: orange;"></i>
-                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Warning").ToList().Count().ToString()</span>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.RepGroup == true && m.HealthState == "Warning").ToList().Count().ToString()</span>
                                 </span>
                             </div>
                         </div>
@@ -83,7 +89,7 @@
                             <div class="cardvalue-right">
                                 <span class="fa-layers fa-fw fa-3x" style="background:lightgrey">
                                     <i class="fas fa-exclamation-circle" style="color:red;"></i>
-                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.Cluster == true && m.HealthState == "Error").ToList().Count().ToString()</span>
+                                    <span class="fa-layers-counter" style="background:black">@Model.Where(m => m.RepGroup == true && m.HealthState == "Error").ToList().Count().ToString()</span>
                                 </span>
                             </div>
                         </div>
@@ -92,7 +98,7 @@
             </div>
         </div>
 
-        <div class="cardpanel panel-inverse clearfix resizable-card">
+        <div class="cardpanel panel-inverse clearfix resizable-card ui-sortable">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -104,13 +110,15 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
-                        <p>New Alerts</p>
-                    }
+                            <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">
+                             @ViewBag.SCOMNew
+                            <h2 class="text-center">New Alerts</h2>
+                        </p>
+                        }
                 </div>
             </div>
         </div>
-        <div class="cardpanel panel-inverse clearfix resizable-card">
+        <div class="cardpanel panel-inverse clearfix resizable-card ui-sortable">
             <div class="panel-heading">
                 <div class="panel-heading-btn">
                     <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -122,8 +130,10 @@
                     @if (ViewBag.SCOMNew != null)
                     {
                         string SCOMNew = ViewBag.SCOMNew.ToString();
-                        <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">@ViewBag.SCOMNew</p>
-                        <p>New Alerts</p>
+                    <p class="cardprimary-value" data-toggle="modal" data-target="#SCOMNewModal">
+                        @ViewBag.SCOMNew
+                        <h2 class="text-center">New Alerts</h2>
+                    </p>
                     }
                 </div>
             </div>
@@ -133,79 +143,34 @@
 
     <script type="text/javascript">
 
-        $('.sortable').sortable({
-            connectWith: ".sortable, .widgets",
-            items: ".cardpanel",
-            placeholder: "placeholder",
-            cursor: "move",
-            opacity: 0.5,
-            handle: ".panel-heading",
-        });
-
-        var initDiagonal;
-        var initFontSize;
 
         $('.resizable-card').resizable({
                 ghost: true,
                 minWidth: 200,
                 minHeight: 255,
-                alsoResize: $(this).find('p'),
-                
-                create: function (event, ui) {
-                    initDiagonal = getContentDiagonal($(this));
-                    initFontSize = parseInt($(this).find('p').css("font-size"));
-                },
-                resize: function (e, ui) {
-                    var newDiagonal = getContentDiagonal($(this));
-                    var ratio = newDiagonal / initDiagonal;
-                    $(this).find('p').css("font-size", initFontSize + ratio * 3);
-                    
-                  }
-            });
-
-        function getContentDiagonal(element) {
-            var contentWidth = $(element).width();
-            var contentHeight = $(element).height();
-            return contentWidth * contentWidth + contentHeight * contentHeight;
-        }
-
-      
-        function balanceColumn1(col1, col2, col3) {
-            if (col1.length > noRows) {
-                if (col2.length < noRows) {
-                    col1.first().appendTo('#col2');
-                } else if (col2.length > noRows) {
-                    col1.first().appendTo('#col3');
-                }
+                grid: [40, 40],
+            animate: true,
+            stop: function (event, ui) {
+                id = ui.element.attr('id')
+                var uiheight = $('#' + id).height();
+                var uiwidth = $('#' + id).width();
+                alert("height is: " + uiheight);
+                $.cookie(id + 'height', uiheight);
+                $.cookie(id + 'width', uiwidth);
+                $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
+                $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
+                $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
+                $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
             }
-        }
 
-        function balanceColumn2(col1, col2, col3) {
-            if (col2.length > noRows) {
-                if (col1.length < noRows) {
-                    col2.first().appendTo('#col1');
-                } else if (col1.length > noRows) {
-                    col2.first().appendTo('#col3');
-                }
-            }
-        }
+        });
 
-        function balanceColumn3(col1, col2, col3) {
-            if (col3.length > noRows) {
-                if (col2.length < noRows) {
-                    col3.first().appendTo('#col2');
-                } else if (col2.length > noRows) {
-                    col3.first().appendTo('#col1');
-                }
-            }
-        }
 
-        //by bobince - http://stackoverflow.com/a/698440/2033671
-        function swapNodes(a, b) {
-            var aparent = a.parentNode;
-            var asibling = a.nextSibling === b ? a : a.nextSibling;
-            b.parentNode.insertBefore(a, b);
-            aparent.insertBefore(b, asibling);
-        }
+
+
+
+       
+
+
 
     </script>

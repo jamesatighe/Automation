@@ -2,7 +2,7 @@
 
 @model IEnumerable<Automation.ViewModels.ADServiceHealthViewModel>
 
-<div class="cardpanel bargraph panel-inverse clearfix resizable-bar">
+<div class="cardpanel bargraph panel-inverse clearfix resizable-bar ui-sortable">
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -15,6 +15,8 @@
         </div>
     </div>
 </div>
+
+<button class="btn btn-success btn-lg" id="save">Save</button>
 
 
 @{ 
@@ -35,11 +37,76 @@
 
 <script type="text/javascript">
 
+    $('.sortable').sortable({
+        connectWith: ".sortable",
+        items: ".cardpanel",
+        placeholder: "placeholder",
+        forcePlaceholderSize: true,
+        cursor: "move",
+        opacity: 0.5,
+        handle: ".panel-heading",
+        update: function (event, ui) {
+            var saveOrd = $('.sortable').sortable('toArray');
+            $.cookie('sortOrder', saveOrd);
+        }
+    });
+
+    $(document).ready(function () {
+        var savedOrd = $.cookie('sortOrder');
+        if (savedOrd) {
+            $.each(savedOrd.split(','), function (i, e) {
+                $('#' + e).insertAfter('.sortable>div>div.cardpanel:eq(' + i + ')');
+                var width = $.cookie(e + 'width');
+                var height = $.cookie(e + 'height');
+                var fontp = $.cookie(e + 'font-p');
+                var fonth2 = $.cookie(e + 'font-h2');
+                if (width && height) {
+                    $('#' + e).css({
+                        "width": width,
+                        "height": height
+                    })
+                }
+                $('#' + e + ' div p').css("font-size", fontp);
+                $('#' + e + ' div h2').css("font-size", fonth2);
+
+
+            });
+        }
+        else {
+            $.each($('.sortable>div>div.cardpanel'), function (i, e) {
+                var width = $.cookie(e.id + 'width');
+                var height = $.cookie(e.id + 'height');
+                var fontp = $.cookie(e.id + 'font-p');
+                var fonth2 = $.cookie(e.id + 'font-h2');
+                if (width && height) {
+                    $('#' + e.id).css({
+                        "width": width,
+                        "height": height
+                    })
+                }
+                $('#' + e.id + ' div p').css("font-size", fontp);
+                $('#' + e.id + ' div h2').css("font-size", fonth2);
+            });
+        }
+
+    });
+
+
+    $('#save').click(function () {
+        var saveOrd = $('.sortable').sortable('toArray');
+        $.cookie('sortOrder', saveOrd);
+    });
+
+
+
+    $('.ui-sortable').each(function (index, domEle) { $(domEle).attr('id', 'column_' + index) });
     $('.resizable-bar').each(function () {
         $(this).resizable({
+            alsoResize: $(this).find('canvas'),
             ghost: true,
             minWidth: 600,
             minHeight: 400,
+            grid: [40, 40],
             animate: true
         });
     });

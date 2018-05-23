@@ -38,21 +38,8 @@
 
         $(document).ready(function () {
             $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM', function () {
-                $(this).find('.sortable').append($('<div>').load('/AD/ADServiceHealth'));
+                $(this).find('.sortable').append($('<div class="row">').load('/AD/ADServiceHealth'));
             });
-
-            //$('#GPOPartial').load('/AD/GPOChart', function () {
-            //    $(this).find(".widgets").append($('<div class="row">').load('/AD/ADServiceHealth'));
-            //});
-
-
-        });
-
-        $(function () {
-            setInterval(function () {
-                $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM');
-                $('#PSPartial').load('/PowerShell/GetPSPartial');
-            }, 900000);
         });
 
         $(document).on('click', '#SCOMNewLink', function () {
@@ -77,7 +64,6 @@
                 $(this).find('#SCOMAlert').html("<div id='SCOMAlert'>Loading . . .</div>");
             });
         });
-
 
 
 

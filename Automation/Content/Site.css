@@ -167,9 +167,9 @@ textarea {
 
 .bargraph {
     min-width: 600px;
-    min-height: 400px;
+    /*min-height: 400px;*/
     width: auto;
-    height: auto;
+    height: auto !important;
     max-height: 100%;
 }
 .pieChart {
