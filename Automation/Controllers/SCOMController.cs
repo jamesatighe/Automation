@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System;
 using X.PagedList;
 using X.PagedList.Mvc.Bootstrap4;
+using System.Text;
 
 namespace Automation.Controllers
 {
@@ -94,6 +95,27 @@ namespace Automation.Controllers
                 return View();
             }
         }
+
+        public String CreateMetricCard(int Total, string Title, string Label)
+        {
+            StringBuilder html = new StringBuilder("<div class='panel-heading'>");
+            html.AppendLine("<div class='panel-heading-btn'>");
+            html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
+            html.AppendLine("</div>");
+            html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
+            html.AppendLine("</div>");
+            html.AppendLine("<div class='panel-body'>");
+            html.AppendLine("<div id='SCOMNewLink' class='value'>");
+            html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
+            html.AppendLine(Total.ToString());
+            html.AppendLine("<h2 class='text-center'>" + Label + "</h2>");
+            html.AppendLine("</p>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
+
+            return html.ToString();
+        }
+
 
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
         public async Task<PartialViewResult> GetPartial(string partialName, string sortOrder, int? page, int? pageLength)
