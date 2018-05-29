@@ -25,6 +25,8 @@
 <div class="row col-centered" style="margin-top: 100px;">
     <div class="btn-group" role="button" aria-label="NewWidget">
         <button type="button" id="metricCard" class="btn btn-info">Metric Card</button>
+        <button type="button" id="splitMetricCard" class="btn btn-info">Split Metric Card</button>
+        <button type="button" id="barChart" class="btn btn-info">Bar Chart</button>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 maxheight" style="display: table">
 
@@ -42,8 +44,9 @@
 
         $(document).ready(function () {
             $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM', function () {
-                $(this).find('.sortable').append($('<div class="row">').load('/AD/ADServiceHealth'));
             });
+
+
         });
 
         $(document).on('click', '#SCOMNewLink', function () {
@@ -70,8 +73,32 @@
         });
 
         $(document).on('click', '#metricCard', function () {
-            var column = $('#SCOMPartial').find('.cardpanel').length + 1
-            $('#SCOMPartial').find('.sortable').append($('<div class="cardpanel panel-inverse clearfix resizable-card ui-sortable" id= "column_' + column + '">').load('/SCOM/CreateMetricCard?total=99&Title="Test%20Widget"&Label=Total'));
+            var column = $('#SCOMPartial').find('.sortable .row .cardpanel').length + 1
+            $('#SCOMPartial').find('.sortable .row:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateMetricCard?total=99&Title=Metric&Label=Total'));
+            $('.resizable-card').resizable({
+                ghost: true,
+                minWidth: 200,
+                minHeight: 255,
+                grid: [40, 40],
+                animate: true,
+                stop: function (event, ui) {
+                    id = ui.element.parent().attr('id');
+                    alert(id);
+                    var uiheight = $('#' + id).height();
+                    var uiwidth = $('#' + id).width();
+                    $.cookie(id + 'height', uiheight);
+                    $.cookie(id + 'width', uiwidth);
+                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
+                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
+                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
+                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
+                }
+            });
+        });
+
+        $(document).on('click', '#barChart', function () {
+            var column = $('#SCOMPartial').find('.sortable .row .cardpanel').length + 1
+            $('#SCOMPartial').find('.sortable .row:first').append($('<div id="column_' + column + '" class="cardpanel" style="width: auto !important">').load('/AD/ADServiceHealth'));
             $('#column_' + column).resizable({
                 ghost: true,
                 minWidth: 200,
@@ -91,8 +118,38 @@
                 }
 
             });
-            
         });
+
+
+        $(document).on('click', '#splitMetricCard', function () {
+            var column = $('#SCOMPartial').find('.sortable .row .cardpanel').length + 1
+            $('#SCOMPartial').find('.sortable .row:first').append($('<div id= "column_' + column + '" class="cardpanel">').load('/SCOM/CreateSplitMetricCard?total=200&Title=Split%20Metric&Label=Total&Warning=150&Error=50'));
+            $('#column_' + column).resizable({
+                ghost: true,
+                minWidth: 200,
+                minHeight: 255,
+                grid: [40, 40],
+                animate: true,
+                stop: function (event, ui) {
+                    id = ui.element.attr('id')
+                    var uiheight = $('#' + id).height();
+                    var uiwidth = $('#' + id).width();
+                    $.cookie(id + 'height', uiheight);
+                    $.cookie(id + 'width', uiwidth);
+                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
+                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
+                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
+                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
+                }
+
+            });
+
+        });
+
+        
+
+
+
     </script>
 }
 

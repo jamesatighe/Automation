@@ -168,7 +168,7 @@ textarea {
 .bargraph {
     min-width: 600px;
     /*min-height: 400px;*/
-    width: auto;
+    width: auto !important;
     height: auto !important;
     max-height: 100%;
 }

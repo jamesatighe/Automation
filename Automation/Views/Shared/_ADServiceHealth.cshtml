@@ -2,7 +2,7 @@
 
 @model IEnumerable<Automation.ViewModels.ADServiceHealthViewModel>
 
-<div class="cardpanel bargraph panel-inverse clearfix resizable-bar ui-sortable">
+<div class="bargraph panel-inverse clearfix resizable-bar ui-sortable">
     <div class="panel-heading">
         <div class="panel-heading-btn">
             <a href="#" class="btn btn-xs btn-icon btn-warning" data-click="panel-collapse" title="Collapse Panel"><i class="fas fa-minus"></i></a>
@@ -45,6 +45,9 @@
         update: function (event, ui) {
             var saveOrd = $('.sortable').sortable('toArray');
             $.cookie('sortOrder', saveOrd);
+            $.each(saveOrd, function (i, e) {
+                $.cookie(e, $('#' + e).html());
+            });
         }
     });
 
@@ -96,7 +99,7 @@
 
 
 
-    $('.ui-sortable').each(function (index, domEle) { $(domEle).attr('id', 'column_' + index) });
+    //$('.ui-sortable').each(function (index, domEle) { $(domEle).attr('id', 'column_' + index) });
     $('.resizable-bar').each(function () {
         $(this).resizable({
             alsoResize: $(this).find('canvas'),
@@ -106,6 +109,26 @@
             grid: [40, 40],
             animate: true
         });
+    });
+
+    $('.resizable-card').resizable({
+        ghost: true,
+        minWidth: 200,
+        minHeight: 255,
+        grid: [40, 40],
+        animate: true,
+        stop: function (event, ui) {
+            id = ui.element.attr('id')
+            var uiheight = $('#' + id).height();
+            var uiwidth = $('#' + id).width();
+            $.cookie(id + 'height', uiheight);
+            $.cookie(id + 'width', uiwidth);
+            $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
+            $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
+            $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
+            $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
+        }
+
     });
 
 

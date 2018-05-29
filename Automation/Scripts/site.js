@@ -28,5 +28,10 @@ $(document).on("click", "[data-click=panel-collapse]", function (a) {
 
 });
 
+$(document).on("click", "[data-click=panel-remove]", function (a) {
+    var ctx = $(this)
+    ctx.closest(".cardpanel").remove();
+});
+
 
 

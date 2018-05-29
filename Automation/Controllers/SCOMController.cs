@@ -98,23 +98,73 @@ namespace Automation.Controllers
 
         public String CreateMetricCard(int Total, string Title, string Label)
         {
-            StringBuilder html = new StringBuilder("<div class='panel-heading'>");
-            html.AppendLine("<div class='panel-heading-btn'>");
-            html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
-            html.AppendLine("</div>");
-            html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
-            html.AppendLine("</div>");
-            html.AppendLine("<div class='panel-body'>");
-            html.AppendLine("<div id='SCOMNewLink' class='value'>");
-            html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
-            html.AppendLine(Total.ToString());
-            html.AppendLine("<h2 class='text-center'>" + Label + "</h2>");
-            html.AppendLine("</p>");
-            html.AppendLine("</div>");
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<div class='cardpanel panel-inverse clearfix resizable-card ui-sortable metric'>");
+                html.AppendLine("<div class='panel-heading'>");
+                    html.AppendLine("<div class='panel-heading-btn'>");
+                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
+                        html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' ><i class='fa fa-times'></i></a>");
+                    html.AppendLine("</div>");
+                    html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
+                html.AppendLine("</div>");
+                html.AppendLine("<div class='panel-body'>");
+                    html.AppendLine("<div id='SCOMNewLink' class='value'>");
+                        html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
+                            html.AppendLine(Total.ToString());
+                            html.AppendLine("<h2 class='text-center'>" + Label + "</h2>");
+                        html.AppendLine("</p>");
+                    html.AppendLine("</div>");
+                html.AppendLine("</div>");
             html.AppendLine("</div>");
 
             return html.ToString();
         }
+
+        public String CreatesplitMetricCard(int Total, int Warning, int Error, string Title, string Label)
+        {
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<div class='panel-inverse clearfix resizable-card ui-sortable split'>");
+                html.AppendLine("<div class='panel-heading'>");
+                    html.AppendLine("<div class='panel-heading-btn'>");
+                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
+            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' ><i class='fa fa-times'></i></a>");
+            html.AppendLine("</div>");
+                    html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
+                html.AppendLine("</div>");
+
+                html.AppendLine("<div class='panel-body'>");
+                    html.AppendLine("<div class='value' id='SCOMClusterLink'>");
+                        html.AppendLine("<div class='cardvalue'>");
+                            html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
+                                html.AppendLine(Total.ToString());
+                                html.AppendLine("<h2 class='text-center'>" + Label + "</h2>");
+                            html.AppendLine("</p>");
+                        html.AppendLine("</div>");
+                        html.AppendLine("<div class='cardcomparison_wrapper clearfix'>");
+                            html.AppendLine("<div class='cardleft_comparison'>");
+                                html.AppendLine("<div class='cardvalue-left'>");
+                                    html.AppendLine("<span class='fa-layers fa-fw fa-3x' style='background: lightgrey'>");
+                                        html.AppendLine("<i class='fas fa-exclamation-triangle' style='color: orange;'></i>");
+                                        html.AppendLine("<span class='fa-layers-counter' style='background: black'>" + Warning.ToString() + "</span>");
+                                    html.AppendLine("</span>");
+                                html.AppendLine("</div>");
+                            html.AppendLine("</div>");
+
+                            html.AppendLine("<div class='cardright_comparison'>");
+                                html.AppendLine("<div class='cardvalue-right'>");
+                                    html.AppendLine("<span class='fa-layers fa-fw fa-3x' style='background: lightgrey'>");
+                                        html.AppendLine("<i class='fas fa-exclamation-circle' style='color:red;'></i>");
+                                        html.AppendLine("<span class='fa-layers-counter' style='background: black'>" + Error.ToString() + "</span>");
+                                    html.AppendLine("</span>");
+                                html.AppendLine("</div>");
+                            html.AppendLine("</div>");
+                        html.AppendLine("</div>");
+                    html.AppendLine("</div>");
+                html.AppendLine("</div>");
+
+            return html.ToString();
+        }
+
 
 
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
