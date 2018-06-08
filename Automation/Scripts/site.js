@@ -11,6 +11,11 @@ $(document).on("click", "[data-click=column-remove]", function (a) {
     $(this).closest('.column').remove();
 })
 
+$(document).on("click", "[data-click=column-collapse]", function (a) {
+    $(this).tooltip("hide");
+    $(this).closest('.column').slideToggle();
+})
+
 $(document).on("click", "[data-click=panel-collapse]", function (a) {
     var ctx = $(this).closest(".cardpanel");
     if (ctx.find(".panel-body").css('display') == 'none') {
