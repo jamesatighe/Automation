@@ -32,9 +32,17 @@ textarea {
  }
 
 .col-centered {
-    float: none;
+    /*float: none;*/
     margin-right: auto;
     margin-left: auto;
+}
+
+.column {
+    border: 1px dotted black;
+    visibility: visible !important;
+    width: auto;
+    height: 800px;
+    padding: 0px;
 }
 
 .placeholder {
@@ -127,8 +135,6 @@ textarea {
 
 
 
-
-
 /* New Panel Stuff */
 
 #widgets {
@@ -160,9 +166,9 @@ textarea {
     -moz-border-radius: 3px;
     border-radius: 3px;
     background-color: lightgrey;
-    height: 255px;
-    /*max-height: 300px;*/
-    width: 200px;
+    height: auto;
+    width: auto;
+   
 }
 
 .bargraph {
@@ -173,13 +179,8 @@ textarea {
     max-height: 100%;
 }
 .pieChart {
-    min-width: 350px;
-    min-height: 255px;
-    width: auto;
-    height: 255px;
-    /*height: auto !important;
-    max-width: 100% !important;
-    max-height: 100% !important;*/
+    width: auto !important;
+    height: auto !important;
 }
 .panel.panel-no-rounded-corner .panel-body, .panel.panel-no-rounded-corner .panel-footer, .panel.panel-no-rounded-corner .panel-heading {
     -webkit-border-radius: 0 !important;
@@ -191,6 +192,13 @@ textarea {
     padding: 10px 15px;
     border: none;
     height: 70px;
+}
+
+.column-heading {
+    padding: 10px 15px;
+    border: none;
+    height: 40px;
+    background-color: dimgrey;
 }
 
 .panel-heading + .slimScrollDiv, .panel-heading + .table, .panel-toolbar {
@@ -373,3 +381,40 @@ textarea {
 .panel-expand .height-full, .panel-expand .height-lg, .panel-expand .height-md, .panel-expand .height-sm, .panel-expand .height-xs {
     height: 100% !important
 }
+
+@media screen and (max-width: 757px) {
+    div.cardvalue > p.cardprimary-value {
+        font-size: 7em
+    }
+    div > span.fa-3x {
+        font-size: 8em;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    div.cardvalue>p.cardprimary-value {
+        font-size: 5em
+    }
+    div > span.fa-3x {
+        font-size: 4em;
+    }
+}
+
+/*@media screen and (max-width: 1157px) {
+    div.cardvalue > p.cardprimary-value {
+        font-size: 5em
+    }
+    div > span.fa-3x {
+        font-size: 3em;
+    }
+}*/
+
+@media screen and (min-width: 1158px) {
+    div.cardvalue > p.cardprimary-value {
+        font-size: 6em
+    }
+    div>span.fa-3x {
+        font-size: 5em;
+    }
+}
+

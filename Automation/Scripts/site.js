@@ -2,6 +2,15 @@
     $(this).attr("data-init") || ($(this).tooltip({ title: "Collapse / Expand", placement: "bottom", trigger: "hover", container: "body" }), $(this).tooltip("show"), $(this).attr("data-init", !0))
 });
 
+$(document).on("mouseenter", '[data-click=column-remove]', function (a) {
+    $(this).attr("data-init") || ($(this).tooltip({ title: "Remove Column", placement: "bottom", trigger: "hover", container: "body" }), $(this).tooltip("show"), $(this).attr("data-init", !0))
+});
+
+$(document).on("click", "[data-click=column-remove]", function (a) {
+    $(this).tooltip("hide");
+    $(this).closest('.column').remove();
+})
+
 $(document).on("click", "[data-click=panel-collapse]", function (a) {
     var ctx = $(this).closest(".cardpanel");
     if (ctx.find(".panel-body").css('display') == 'none') {
@@ -29,7 +38,7 @@ $(document).on("click", "[data-click=panel-collapse]", function (a) {
 });
 
 $(document).on("click", "[data-click=panel-remove]", function (a) {
-    var ctx = $(this)
+    var ctx = $(this).tooltip("hide");
     ctx.closest(".cardpanel").remove();
 });
 

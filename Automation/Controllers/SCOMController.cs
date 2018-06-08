@@ -102,8 +102,8 @@ namespace Automation.Controllers
             html.AppendLine("<div class='cardpanel panel-inverse clearfix resizable-card ui-sortable metric'>");
                 html.AppendLine("<div class='panel-heading'>");
                     html.AppendLine("<div class='panel-heading-btn'>");
-                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
-                        html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' ><i class='fa fa-times'></i></a>");
+                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel' style='font-size: 0.25em'><i class='fas fa-minus'></i></a>");
+                        html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
                     html.AppendLine("</div>");
                     html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
                 html.AppendLine("</div>");
@@ -123,11 +123,11 @@ namespace Automation.Controllers
         public String CreatesplitMetricCard(int Total, int Warning, int Error, string Title, string Label)
         {
             StringBuilder html = new StringBuilder();
-            html.AppendLine("<div class='panel-inverse clearfix resizable-card ui-sortable split'>");
+            html.AppendLine("<div class='cardpanel panel-inverse clearfix resizable-card ui-sortable split'>");
                 html.AppendLine("<div class='panel-heading'>");
                     html.AppendLine("<div class='panel-heading-btn'>");
-                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel'><i class='fas fa-minus'></i></a>");
-            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' ><i class='fa fa-times'></i></a>");
+                        html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel' style='font-size: 0.25em'><i class='fas fa-xs fa-minus'></i></a>");
+            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
             html.AppendLine("</div>");
                     html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
                 html.AppendLine("</div>");
@@ -165,6 +165,60 @@ namespace Automation.Controllers
             return html.ToString();
         }
 
+
+        public string CreateDoughnutGraph(string Title, int Good, int Bad, string div)
+        {
+            StringBuilder html = new StringBuilder();
+                html.AppendLine("<div class='cardpanel doughnutgraph panel-inverse ui-sortable resizable-card'>");
+                    html.AppendLine("<div class='panel-heading'>");
+                        html.AppendLine("<div class='panel-heading-btn'>");
+                            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel' style='font-size: 0.25em'><i class='fas fa-minus'></i></a>");
+                            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
+                        html.AppendLine("</div>");
+                        html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
+                    html.AppendLine("</div>");
+                    html.AppendLine("<div class='panel-body'>");
+                        html.AppendLine("<canvas id='column_" + div + "'></canvas>");
+                    html.AppendLine("</div>");
+               html.AppendLine("</div>");
+
+            html.AppendLine("<script type='text/javascript'>");
+            html.AppendLine("var ctx = document.getElementById('column_" + div + "');");
+            html.AppendLine("var GPOPieChart = new Chart(ctx,");
+                        html.AppendLine("{");
+                    html.AppendLine("type: 'doughnut',");
+                    html.AppendLine("data: {");
+                        html.AppendLine("labels: ['Healthy','Error'],");    
+                        html.AppendLine("datasets: [");
+                            html.AppendLine("{");
+                                html.AppendLine("label: 'GPOs',");
+                                html.AppendLine("backgroundColor:['Green','Red'],");
+                                html.AppendLine("data: ['" + Good.ToString() + "','" + Bad.ToString() + "']");
+                            html.AppendLine("}");
+                        html.AppendLine("]");
+                html.AppendLine("},");
+                html.AppendLine("options: {");
+                    html.AppendLine("title: {");
+                        html.AppendLine("display: true,");
+                        html.AppendLine("responsive: true,");
+                        html.AppendLine("text: 'GPO Health'");
+                    html.AppendLine("}");
+                html.AppendLine("}");
+            html.AppendLine("});");
+
+            return html.ToString();
+        }
+
+        public string CreateColumn()
+        {
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<div class='clearfix column-heading'>");
+            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-warning' data-click='panel-collapse' title='Collapse Panel' style='float: right; font-size: 0.25em'><i class='fas fa-minus'></i></a>");
+            html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-danger' data-click='column-remove' title='Remove Column' style='float: right; font-size: 0.25em'><i class='fa fa-times'></i></a>");
+            html.AppendLine("</div>");
+
+            return html.ToString();
+        }
 
 
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
