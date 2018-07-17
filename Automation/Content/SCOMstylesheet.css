@@ -5,7 +5,7 @@
     color: #bc2929 !important;
   }
 .cardprimary-value {
-    color: #f10e0e;
+    color: green;
     font-family: Helvetica;
     font-weight: 300;
     font-size: 50px;
@@ -47,11 +47,13 @@
 .cardleft_comparison {
     float: left;
     width: 50%;
+    margin: 0px 0px 5px 0;
     background-color: lightgrey
 }
 .cardright_comparison {
     float: right;
     width: 50%;
+    margin: 0px 0px 5px 0;
     background-color: lightgrey
 }
     

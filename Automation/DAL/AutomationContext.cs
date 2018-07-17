@@ -20,6 +20,7 @@ namespace Automation.DAL
         public DbSet<SCOMAlert> SCOMAlert { get; set; }
         public DbSet<AD> AD { get; set; }
         public DbSet<GPO> GPO { get; set; }
+        public DbSet<Cache> Cache { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

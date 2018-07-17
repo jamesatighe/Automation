@@ -8,6 +8,7 @@ namespace Automation.Models
     public class SCOMAlert
     {
         public int ID { get; set; }
+        public Guid AlertID { get; set; }
         public string AlertHealth { get; set; }
         public string AlertName { get; set; }
         public string MonitorPath { get; set; }

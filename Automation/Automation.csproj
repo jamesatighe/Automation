@@ -503,8 +503,25 @@
     <Compile Include="Migrations\201805221432014_repgroup.Designer.cs">
       <DependentUpon>201805221432014_repgroup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806130825442_SCOMAlert_ALertID.cs" />
+    <Compile Include="Migrations\201806130825442_SCOMAlert_ALertID.Designer.cs">
+      <DependentUpon>201806130825442_SCOMAlert_ALertID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806211104255_CacheModel.cs" />
+    <Compile Include="Migrations\201806211104255_CacheModel.Designer.cs">
+      <DependentUpon>201806211104255_CacheModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806211120280_CacheModelcontext.cs" />
+    <Compile Include="Migrations\201806211120280_CacheModelcontext.Designer.cs">
+      <DependentUpon>201806211120280_CacheModelcontext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806211325352_CacheModelLoginTimes.cs" />
+    <Compile Include="Migrations\201806211325352_CacheModelLoginTimes.Designer.cs">
+      <DependentUpon>201806211325352_CacheModelLoginTimes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AD.cs" />
+    <Compile Include="Models\Cache.cs" />
     <Compile Include="Models\GPO.cs" />
     <Compile Include="Models\LogOnModel.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -688,6 +705,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805221432014_repgroup.resx">
       <DependentUpon>201805221432014_repgroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806130825442_SCOMAlert_ALertID.resx">
+      <DependentUpon>201806130825442_SCOMAlert_ALertID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806211104255_CacheModel.resx">
+      <DependentUpon>201806211104255_CacheModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806211120280_CacheModelcontext.resx">
+      <DependentUpon>201806211120280_CacheModelcontext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806211325352_CacheModelLoginTimes.resx">
+      <DependentUpon>201806211325352_CacheModelLoginTimes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

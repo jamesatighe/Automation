@@ -16,6 +16,37 @@ $(document).on("click", "[data-click=column-collapse]", function (a) {
     $(this).closest('.column').slideToggle();
 })
 
+$(document).on("click", "[data-click=threshold-edit]", function (a) {
+    $(this).tooltip("hide");
+
+    $('#threshold').load('/SCOM/CreateModal?metricType=SCOMNew&Type=Edit');
+    setTimeout(function () {
+        var warning = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-warning')[0].innerHTML;
+        var error = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-error')[0].innerHTML;
+        $('#ThresholdModal').find('#warning')[0].value = warning;
+        $('#ThresholdModal').find('#error')[0].value = error;
+        $('#ThresholdModal').modal('show');
+    }, 1000);
+})
+
+$(document).on("click", "[data-click=threshold-edit-split]", function (a) {
+    $(this).tooltip("hide");
+    var warningw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-w')[0].innerHTML;
+    var warninge = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-e')[0].innerHTML;
+    var errorw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-w')[0].innerHTML;
+    var errore = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-e')[0].innerHTML;
+    $('#threshold').load('/SCOM/CreateModal?metricType=split&Type=Edit');
+
+    setTimeout(function () {
+
+        $('#ThresholdModal').find('#warningw')[0].value = warningw;
+        $('#ThresholdModal').find('#warninge')[0].value = warninge;
+        $('#ThresholdModal').find('#errorw')[0].value = errorw;
+        $('#ThresholdModal').find('#errore')[0].value = errore;
+        $('#ThresholdModal').modal('show');
+    }, 1000);
+})
+
 $(document).on("click", "[data-click=panel-collapse]", function (a) {
     var ctx = $(this).closest(".cardpanel");
     if (ctx.find(".panel-body").css('display') == 'none') {

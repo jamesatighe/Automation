@@ -21,39 +21,71 @@
         </div>
     </div>
 </div>
-
-<div class="row col-centered" style="margin-top: 100px; display: block">
-        <div class="btn-group" role="button" aria-label="NewWidget">
-            <button type="button" id="metricCard" class="btn btn-info">Metric Card</button>
-            <button type="button" id="splitMetricCard" class="btn btn-info">Split Metric Card</button>
-            <button type="button" id="barChart" class="btn btn-info">Bar Chart</button>
-            <button type="button" id="doughnutChart" class="btn btn-info">Doughnut Chart</button>
+<div id="threshold" class="threshold">
+@*Modal for Threshold dialog*@
+</div>
+<div id="alertModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Information</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="alertDesc"></p>
+                <p id="alertMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-success btn-lg">Close</button>
+            </div>
         </div>
+    </div>
+</div>
 
-
-        <div class="btn-group float-right" role="button" aria-label="NewWidget" style="float-right">
-            <button type="button" id="smallColumn" class="btn btn-info">Small Column</button>
-            <button type="button" id="mediumColumn" class="btn btn-info">Medium Column</button>
-            <button type="button" id="largeColumn" class="btn btn-info">Large Column</button>
+<div class="row col-centered container-fluid"  style="margin-top: 100px; display: table">
+    <div class="btn-group" role="button" aria-label="NewWidget">
+        <div class="dropdown">
+            <button type="button" id="SCOMButton" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SCOM</button>
+            <div class="dropdown-menu" aria-labelledby="SCOMButton">
+                <a class="dropdown-item" href="#" id="SCOMNew">New Alerts (Metric)</a>
+                <a class="dropdown-item" href="#" id="SCOMResolved">Resolved Alerts - Today  (Metric)</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" id="SCOMCluster">SCOM Cluster Health (Split-Metric)</a>
+            </div>
         </div>
+        <button type="button" id="doughnutChart" class="btn btn-info">Doughnut Chart</button>
+        <button type="button" id="save" class="btn btn-success"><i class="fa fa-thumbtack"></i> Save</button>
+    </div>
 
-    <div class="col-lg-12 col-md-12 col-sm-12 maxheight" style="display: table">
 
+    <div class="btn-group float-right clearfix" role="button" aria-label="NewWidget" style="float-right">
+        <button type="button" id="smallColumn" class="btn btn-info"><i class="fa fa-columns fa-sm"></i></button>
+        <button type="button" id="mediumColumn" class="btn btn-info"><i class="fa fa-columns fa-lg"></i></button>
+        <button type="button" id="largeColumn" class="btn btn-info"><i class="fa fa-columns fa-2x"></i></button>
+    </div>
+
+
+    <div class="col-lg-12 col-md-12 col-sm-12" style="display: inline-block">
         <div id="SCOMPartial">
             Loading . . .
         </div>
+    </div>   
+ </div>
 
-        @*<div id="GPOPartial" style="display: table">
-                Loading. . .
-            </div>*@
-    </div>
-</div>
+
 @section Scripts {
     <script type='text/javascript'>
 
         $(document).ready(function () {
             $('#SCOMPartial').load('/SCOM/GetPartial?partialName=_SCOM', function () {
+                $('.sortColumn').load('/SCOM/LoadHTML')
             });
+            setInterval(function () {
+                SCOMRefresh();
+            }, 30000);
+            setTimeout(InitiateSort(), 5000);
 
 
         });
@@ -83,101 +115,322 @@
 
         //Buttons to add various metric cards
 
+        $(document).on('click', '#SCOMNew', function () {
+            var exists = $('#SCOMPartial').find('.SCOMNew');
+            if (exists.length == 0) {
+                $('#threshold').load('/SCOM/CreateModal?metricType=SCOMNew');
+                setTimeout(function () {
+                    var card = $('#SCOMPartial .SCOMNew').find('#panel-threshold');
+                    if (card.length == 0) {
+                        $('#ThresholdModal').find('#warning')[0].value = 0;
+                        $('#ThresholdModal').find('#error')[0].value = 0;
+                        $('#ThresholdModal').modal('show');
+                    }
+                    else {
+                        var warning = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-warning')[0].innerHTML;
+                        var error = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-error')[0].innerHTML;
+                        $('#ThresholdModal').find('#warning')[0].value = warning;
+                        $('#ThresholdModal').find('#error')[0].value = error;
+                        $('#ThresholdModal').modal('show');
+                    }
+                    
+                }, 1000);
+            }
+            else {
+                $('#alertModal').find('#alertDesc')[0].innerHTML = "The selected monitor is already present on the dashboard.";
+                $('#alertModal').find('#alertMessage')[0].innerHTML = "No action is required.";
+                $('#alertModal').modal('show');
+
+            }
+        });
+
+        $(document).on('click', '#SCOMCluster', function () {
+            var exists = $('#SCOMPartial').find('.SCOMClusterHealth');
+            if (exists.length == 0) {
+                $('#threshold').load('/SCOM/CreateModal?metricType=split');
+                setTimeout(function () {
+                    $('#ThresholdModal').modal('show');
+                }, 1000);
+            }
+            else {
+                $('#alertModal').find('#alertDesc')[0].innerHTML = "The selected monitor is already present on the dashboard.";
+                $('#alertModal').find('#alertMessage')[0].innerHTML = "No action is required.";
+                $('#alertModal').modal('show');
+
+            }
+        });
+
+        $(document).on('click', '#Threshold-SCOMNew', function () {
+            var warning = document.getElementById('warning').value;
+            var error = document.getElementById('error').value;
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                success: function (data) {
+                    var results = data;
+                    var total = results.split(",")[0];
+                    var link = results.split(",")[1];
+                    var title = results.split(",")[2];
+                    title = title.replace(/ /g, "%20");
+                    var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
+                    $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateMetricCard?total=' + total + '&Title=' + title + '&Label=Total&LinkID=' + link + '&content=SCOMNew&warning=' + warning + '&error=' + error));
+                }
+            });
+            $('#ThresholdModal').modal('hide');
+        });
+
+
+        $(document).on('click', '#Threshold-SCOMNew-edit', function () {
+            var warning = document.getElementById('warning').value;
+            var error = document.getElementById('error').value;
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                success: function (data) {
+                    var results = data;
+                    var total = results.split(",")[0];
+                    var warning = results.split(",")[3];
+                    var error = results.split(",")[4];
+
+                    var thresholdwarning = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-warning')[0];
+                    var thresholderror = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-error')[0];
+                    thresholdwarning.innerHTML = warning;
+                    thresholderror.innerHTML = error;
+                }
+            });
+            $('#ThresholdModal').modal('hide');
+        });
+
+        $(document).on('click', '#Threshold-split', function () {
+            var warningw = document.getElementById('warningw').value;
+            var warninge = document.getElementById('warninge').value;
+            var errorw = document.getElementById('errorw').value;
+            var errore = document.getElementById('errore').value;
+
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMClusterHealth?warningw=warningw&warninge=warninge&errorw=errorw&errore=errore",
+                success: function (data) {
+                    var results = data;
+                    var warning = results.split(",")[0];
+                    var error = results.split(",")[1];
+                    var total = results.split(",")[2];
+                    var link = results.split(",")[3];
+                    var title = results.split(",")[4];
+                    title = title.replace(/ /g, "%20");
+
+                    var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
+                    $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateSplitMetricCard?total=' + total + '&Title=' + title + '&Label=Total&Warning=' + warning + '&Error=' + error + '&LinkID=' + link + '&content=SCOMClusterHealth' + "&warningw=" + warningw + "&warninge=" + warninge + "&errorw=" + errorw + "&errore=" + errore));
+                },
+
+            });
+        });
+
+        $(document).on('click', '#Threshold-split-edit', function () {
+            var warningw = document.getElementById('warningw').value;
+            var warninge = document.getElementById('warninge').value;
+            var errorw = document.getElementById('errorw').value;
+            var errore = document.getElementById('errore').value;
+
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMClusterHealth?warningw=warningw&warninge=warninge&errorw=errorw&errore=errore",
+                success: function (data) {
+                    var results = data;
+                    var warning = results.split(",")[0];
+                    var error = results.split(",")[1];
+                    var total = results.split(",")[2];
+                    var link = results.split(",")[3];
+                    var title = results.split(",")[4];
+                    title = title.replace(/ /g, "%20");
+
+
+                    var tempwarningw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-w')[0];
+                    var tempwarninge = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-e')[0];
+                    var temperrorw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-w')[0];
+                    var temperrore = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-e')[0];
+                    tempwarningw.innerHTML = warningw;
+                    tempwarninge.innerHTML = warninge;
+                    temperrorw.innerHTML = errorw;
+                    temperrore.innerHTML = errore;
+                }
+            });
+        });
+
+        function InitiateSort() {
+            $('.sortable').sortable({
+                connectWith: ".sortable",
+                items: ".cardpanel",
+                placeholder: "placeholder",
+                forcePlaceholderSize: true,
+                cursor: "move",
+                opacity: 0.5,
+                handle: ".panel-heading"
+            });
+        }
+
+        function SCOMRefresh() {
+
+            var exists = $('#SCOMPartial .SCOMNew').find('#panel-threshold');
+            if (exists.length > 0) {
+                var warning = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-warning')[0].outerText;
+                var error = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-error')[0].outerText;
+                $.ajax({
+                    type: "GET",
+                    url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                    success: function (data) {
+                        var results = data;
+                        var total = results.split(",")[0];
+                        var warning = results.split(",")[3];
+                        var error = results.split(",")[4];
+
+                        var cardvalue = $('#SCOMPartial .SCOMNew').find('.cardprimary-value')[0];
+                        cardvalue.innerHTML = total;
+                        if (total > warning) {
+                            $('#SCOMPartial .SCOMNew').find('.cardprimary-value').css("color", "orange");
+                        }
+                        if (total > error) {
+
+                            $('#SCOMPartial .SCOMNew').find('.cardprimary-value').css("color", "red");
+                        }
+                        if (total < error && total < warning) {
+                            $('#SCOMPartial .SCOMNew').find('.cardprimary-value').css("color", "green");
+                        }
+                    }
+                });
+            }
+
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/SCOM/GetSCOMClusterHealth",
+            //    success: function (data) {
+            //        var results = data;
+            //        var warning = results.split(",")[0];
+            //        var error = results.split(",")[1];
+            //        var total = results.split(",")[2];
+            //        var link = results.split(",")[3];
+
+            //        var cards = $('div.cardpanel.SCOMClusterHealth')
+            //        $.each(cards, function (i, val) {
+            //            var totalarr = val.getElementsByClassName('cardprimary-value')
+            //            for (var i = totalarr.length - 1; i >= 0; --i) {
+            //                totalarr[i].innerHTML = total;
+            //            }
+            //            var warningarr = val.getElementsByClassName('cardvalue-left')
+            //            for (var i = warningarr.length - 1; i >= 0; --i) {
+            //                var item = warningarr[i];
+            //                item.lastChild.previousElementSibling.children[1].textContent = warning
+            //            }
+            //            var errorarr = val.getElementsByClassName('cardvalue-right')
+            //            for (var i = errorarr.length - 1; i >= 0; --i) {
+            //                var item = errorarr[i];
+            //                item.lastChild.previousElementSibling.children[1].textContent = error
+            //            }
+
+            //        });
+            //    }
+            //});
+
+            var exists = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold');
+            if (exists.length == 0) {
+
+            }
+            else {
+                var warningw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-w')[0].outerText;
+                var warninge = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-e')[0].outerText;
+                var errorw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-w')[0].outerText;
+                var errore = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-e')[0].outerText;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/SCOM/GetSCOMClusterHealth",
+                    success: function (data) {
+                        var results = data;
+                        var warning = results.split(",")[0];
+                        var error = results.split(",")[1];
+                        var total = results.split(",")[2];
+                        var link = results.split(",")[3];
+                        var card = $('div.cardpanel.SCOMClusterHealth')
+                        var total = $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value')[0].outerText;
+                        total.innerHTML = total;
+                        var leftValue = $('#SCOMPartial .SCOMClusterHealth').find('.cardvalue-left')[0];
+                        leftValue.lastChild.previousElementSibling.children[1].textContent = warning;
+                        var rightValue = $('#SCOMPartial .SCOMClusterHealth').find('.cardvalue-right')[0];
+                        rightValue.lastChild.previousElementSibling.children[1].textContent = error;
+
+                        if (warning > warningw || error > errorw) {
+                            $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value').css("color", "orange");
+                        }
+                        if (warning > warninge || error > errore) {
+
+                            $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value').css("color", "red");
+                        }
+                        if (total < error && total < warning) {
+                            $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value').css("color", "green");
+                        }
+
+
+                    }
+                });
+            }
+            
+        };
+
+        $(document).on('click', '#SCOMResolved', function () {
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMAlerts?type=Resolved",
+                success: function (data) {
+                    var results = data;
+                    var total = results.split(",")[0];
+                    var link = results.split(",")[1];
+                    var title = results.split(",")[2];
+                    title = title.replace(/ /g, "%20");
+                    var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
+                    $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateMetricCard?total=' + total + '&Title=' + title + '&Label=Total&LinkID=' + link));
+                }
+            });
+        });
+
+
+
+
         $(document).on('click', '#metricCard', function () {
             var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
             $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateMetricCard?total=99&Title=Metric&Label=Total'));
-            $('.resizable-card').resizable({
-                ghost: true,
-                minWidth: 200,
-                minHeight: 255,
-                grid: [40, 40],
-                animate: true,
-                stop: function (event, ui) {
-                    id = ui.element.parent().attr('id');
-                    var uiheight = $('#' + id).height();
-                    var uiwidth = $('#' + id).width();
-                    $.cookie(id + 'height', uiheight);
-                    $.cookie(id + 'width', uiwidth);
-                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
-                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
-                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
-                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
-                }
-            });
         });
 
         $(document).on('click', '#barChart', function () {
             var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
             $('#SCOMPartial').find('.sortable:first').append($('<div id="column_' + column + '" class="cardpaneldiv" style="width: auto !important">').load('/AD/ADServiceHealth'));
-            $('#column_' + column).resizable({
-                ghost: true,
-                //minWidth: 200,
-                //minHeight: 400,
-                grid: [40, 40],
-                animate: true,
-                stop: function (event, ui) {
-                    id = ui.element.attr('id')
-                    var uiheight = $('#' + id).height();
-                    var uiwidth = $('#' + id).width();
-                    $.cookie(id + 'height', uiheight);
-                    $.cookie(id + 'width', uiwidth);
-                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
-                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
-                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
-                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
-                }
-
-            });
         });
 
         $(document).on('click', '#doughnutChart', function () {
             var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
             $('#SCOMPartial').find('.sortable:first').append($('<div id="column_' + column + '" class="cardpaneldiv">').load('/SCOM/CreateDoughnutGraph?Title=Doughnut&Good=10&Bad=3&div=' + column + 'chart'));
-            $('#column_' + column).resizable({
-                ghost: true,
-                //minWidth: 200,
-                //minHeight: 400,
-                grid: [40, 40],
-                animate: true,
-                stop: function (event, ui) {
-                    id = ui.element.attr('id')
-                    var uiheight = $('#' + id).height();
-                    var uiwidth = $('#' + id).width();
-                    $.cookie(id + 'height', uiheight);
-                    $.cookie(id + 'width', uiwidth);
-                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
-                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
-                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
-                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
-                }
-
-            });
         });
                 
         $(document).on('click', '#splitMetricCard', function () {
             var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
             $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv">').load('/SCOM/CreateSplitMetricCard?total=200&Title=Split%20Metric&Label=Total&Warning=150&Error=50'));
-            $('#column_' + column).resizable({
-                ghost: true,
-                minWidth: 200,
-                minHeight: 270,
-                grid: [40, 40],
-                animate: true,
-                stop: function (event, ui) {
-                    id = ui.element.attr('id')
-                    var uiheight = $('#' + id).height();
-                    var uiwidth = $('#' + id).width();
-                    $.cookie(id + 'height', uiheight);
-                    $.cookie(id + 'width', uiwidth);
-                    $.cookie(id + 'font-p', $('#' + id + ' div p').css("font-size"));
-                    $.cookie(id + 'font-h2', $('#' + id + ' div h2').css("font-size"));
-                    $('.resizable-card p').fitText(0.4, { maxFontSize: '80px' });
-                    $('.resizable-card h2').fitText(0.6, { maxFontSize: '70px' });
-                }
-
-            });
-
         });
+
+        $(document).on('click', '#save', function () {
+            var html = $(".sortColumn").html()
+            $.ajax({
+                type: 'POST',
+                url: "/SCOM/SaveHTML",
+                data: {
+                    html: html
+                },
+                success: function (data) {
+                    $('#alertModal').find('#alertDesc')[0].innerHTML = "View has been saved.";
+                    $('#alertModal').find('#alertMessage')[0].innerHTML = "No action is required.";
+                    $('#alertModal').modal('show');
+                },
+                error: function (req, status, error) { }
+            });
+        })
 
         //Buttons to add columns of various sizes
 
@@ -185,66 +438,22 @@
             var sortcolumn = $('#SCOMPartial').find('.row .sortColumn .column').length + 1
             $('#SCOMPartial').find('.sortColumn').append($('<div id= "sortColumn_' + sortcolumn + '" class="column sortable col-md-2">').load('/SCOM/CreateColumn'));
 
-            $('.sortable').sortable({
-                connectWith: ".sortable",
-                items: ".cardpanel",
-                placeholder: "placeholder",
-                forcePlaceholderSize: true,
-                cursor: "move",
-                opacity: 0.5,
-                handle: ".panel-heading",
-                update: function (event, ui) {
-                    var saveOrd = $('.sortable').sortable('toArray');
-                    $.cookie('sortOrder', saveOrd);
-                    $.each(saveOrd, function (i, e) {
-                        $.cookie(e, $('#' + e).html());
-                    });
-                }
-            });
+            InitiateSort();
+
         });
 
         $(document).on("click", '#mediumColumn', function (a) {
             var sortcolumn = $('#SCOMPartial').find('.row .sortColumn .column').length + 1
             $('#SCOMPartial').find('.sortColumn').append($('<div id= "sortColumn_' + sortcolumn + '" class="column sortable col-md-3">').load('/SCOM/CreateColumn'));
 
-            $('.sortable').sortable({
-                connectWith: ".sortable",
-                items: ".cardpanel",
-                placeholder: "placeholder",
-                forcePlaceholderSize: true,
-                cursor: "move",
-                opacity: 0.5,
-                handle: ".panel-heading",
-                update: function (event, ui) {
-                    var saveOrd = $('.sortable').sortable('toArray');
-                    $.cookie('sortOrder', saveOrd);
-                    $.each(saveOrd, function (i, e) {
-                        $.cookie(e, $('#' + e).html());
-                    });
-                }
-            });
+            InitiateSort();
         });
 
         $(document).on("click", '#largeColumn', function (a) {
             var sortcolumn = $('#SCOMPartial').find('.row .sortColumn .column').length + 1
             $('#SCOMPartial').find('.sortColumn').append($('<div id= "sortColumn_' + sortcolumn + '" class="column sortable col-md-6">').load('/SCOM/CreateColumn'));
 
-            $('.sortable').sortable({
-                connectWith: ".sortable",
-                items: ".cardpanel",
-                placeholder: "placeholder",
-                forcePlaceholderSize: true,
-                cursor: "move",
-                opacity: 0.5,
-                handle: ".panel-heading",
-                update: function (event, ui) {
-                    var saveOrd = $('.sortable').sortable('toArray');
-                    $.cookie('sortOrder', saveOrd);
-                    $.each(saveOrd, function (i, e) {
-                        $.cookie(e, $('#' + e).html());
-                    });
-                }
-            });
+            InitiateSort();
         });
 
 
