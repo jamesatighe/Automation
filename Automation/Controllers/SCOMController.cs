@@ -24,6 +24,11 @@ namespace Automation.Controllers
             return View(await db.SCOMAlert.ToListAsync());
         }
 
+        // Various Functions to pull back data from databases
+
+        // New/Resolved Alerts, Cluster, DFS and Server Health (For Metric)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<String> GetSCOMAlerts(string type, int warning, int error)
         {
             if (type == "New")
@@ -32,7 +37,35 @@ namespace Automation.Controllers
                 List<SCOMAlert> scomalert = await db.SCOMAlert.Where(s => s.Resolved == date).ToListAsync();
                 var count = scomalert.Count().ToString();
                 var link = "SCOMNewLink";
-                var title = "SCOM New";
+                var title = "New Alert";
+                var results = (count + "," + link + "," + title + "," + warning + "," + error);
+                return results;
+            }
+
+            else if (type == "Cluster")
+            {
+                List<SCOM> scom = await db.SCOM.Where(s => s.Cluster == true).ToListAsync();
+                var count = scom.Count().ToString();
+                var link = "SCOMClusterHealth";
+                var title = "Cluster Health";
+                var results = (count + "," + link + "," + title + "," + warning + "," + error);
+                return results;
+            }
+            else if (type == "DFS")
+            {
+                List<SCOM> scom = await db.SCOM.Where(s => s.RepGroup == true).ToListAsync();
+                var count = scom.Count().ToString();
+                var link = "SCOMDFSLink";
+                var title = "DFS Cluster Health";
+                var results = (count + "," + link + "," + title + "," + warning + "," + error);
+                return results;
+            }
+            else if (type == "Server")
+            {
+                List<SCOM> scom = await db.SCOM.Where(s => s.Server == true).ToListAsync();
+                var count = scom.Count().ToString();
+                var link = "SCOMServerLink";
+                var title = "Server Health";
                 var results = (count + "," + link + "," + title + "," + warning + "," + error);
                 return results;
             }
@@ -42,13 +75,13 @@ namespace Automation.Controllers
                 List<SCOMAlert> scomalert = await db.SCOMAlert.Where(s => s.Resolved == date).ToListAsync();
                 var count = scomalert.Count().ToString();
                 var link = "SCOMResolvedLink";
-                var title = "SCOM Resolved Today";
+                var title = "Resolved Today";
                 var results = (count + "," + link + "," + title + "," + warning + "," + error);
                 return results;
             }
-
         }
 
+        // Cluster Health (For Split Metric)
         public async Task<String> GetSCOMClusterHealth(string warningw, string warninge, string errorw, string errore)
         {
             List<SCOM> scom = await db.SCOM.Where(s => s.Cluster == true).ToListAsync();
@@ -57,12 +90,89 @@ namespace Automation.Controllers
             var Error = scom.Where(s => s.HealthState == "Error").Count();
             var Total = scom.Count();
             var link = "SCOMClusterLink";
-            var title = "SCOM Cluster Health";
+            var title = "Cluster Health";
+            
+            var results = (Warning + "," + Error + "," + Total + "," + link + "," + title + "," + warningw + "," + warninge + "," + errorw + "," + errore);
+            return results;
+        }
 
+        // DFS Health (For Split Metric)
+        public async Task<String> GetSCOMDFSHealth(string warningw, string warninge, string errorw, string errore)
+        {
+            List<SCOM> scom = await db.SCOM.Where(s => s.RepGroup == true).ToListAsync();
+
+            var Warning = scom.Where(s => s.HealthState == "Warning").Count();
+            var Error = scom.Where(s => s.HealthState == "Error").Count();
+            var Total = scom.Count();
+            var link = "SCOMDFSLink";
+            var title = "DFS Cluster Health";
 
             var results = (Warning + "," + Error + "," + Total + "," + link + "," + title + "," + warningw + "," + warninge + "," + errorw + "," + errore);
             return results;
         }
+
+        // Server Health (For Split Metric)
+        public async Task<String> GetSCOMServerHealth(string warningw, string warninge, string errorw, string errore)
+        {
+            List<SCOM> scom = await db.SCOM.Where(s => s.Server == true).ToListAsync();
+
+            var Warning = scom.Where(s => s.HealthState == "Warning").Count();
+            var Error = scom.Where(s => s.HealthState == "Error").Count();
+            var Total = scom.Count();
+            var link = "SCOMServerLink";
+            var title = "Server Health";
+
+            var results = (Warning + "," + Error + "," + Total + "," + link + "," + title + "," + warningw + "," + warninge + "," + errorw + "," + errore);
+            return results;
+        }
+
+        // Function to get AD Health Data
+
+        public async Task<String> GetADHealth()
+        {
+            List<AD> RT = await db.AD.Where(a => a.Domain == "rt.ssegroup.net").ToListAsync();
+            List<AD> UK = await db.AD.Where(a => a.Domain == "uk.ssegroup.net").ToListAsync();
+
+
+            var RTserviceErrors = 0;
+            var UKserviceErrors = 0;
+
+            foreach (var item in RT)
+            {
+                if (item.KDCSvc != "Running")
+                    RTserviceErrors++;
+                if (item.NetLogonSvc != "Running")
+                    RTserviceErrors++;
+                if (item.NTDSSvc != "Running")
+                    RTserviceErrors++;
+                if (item.W32TimeSvc != "Running")
+                    RTserviceErrors++;
+                if (item.DNSSvc != "Running")
+                    RTserviceErrors++;
+                if (item.DFSRSvc != "Running")
+                    RTserviceErrors++;
+            }
+
+            foreach (var item in UK)
+            {
+                if (item.KDCSvc != "Running")
+                    UKserviceErrors++;
+                if (item.NetLogonSvc != "Running")
+                    UKserviceErrors++;
+                if (item.NTDSSvc != "Running")
+                    UKserviceErrors++;
+                if (item.W32TimeSvc != "Running")
+                    UKserviceErrors++;
+                if (item.DNSSvc != "Running")
+                    UKserviceErrors++;
+                if (item.DFSRSvc != "Running")
+                    UKserviceErrors++;
+            }
+            var results = (RTserviceErrors + "," + UKserviceErrors);
+            return results;
+        }
+
+        // Functions to create various metric cards (HTML)
 
         public String CreateMetricCard(int Total, string Title, string LinkID, string Label, string content, int? error, int? warning)
         {
@@ -73,7 +183,6 @@ namespace Automation.Controllers
             html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='threshold-edit' title='Edit Threshold' style='font-size: 0.25em'><i class='fas fa-wrench'></i></a>");
             html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
             html.AppendLine("</div>");
-            //html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
             html.AppendLine("</div>");
             html.AppendLine("<div class='panel-body'>");
             html.AppendLine("<div id='panel-threshold' class='panel-threshold' style='display: none'>");
@@ -82,8 +191,25 @@ namespace Automation.Controllers
             html.AppendLine("<p id='threshold-content'>" + content + "</p");
             html.AppendLine("</div>");
             html.AppendLine("</div>");
-            html.AppendLine("<p class='panel-body-title'>");
-            html.AppendLine(Title);
+
+
+            html.AppendLine("<div style='margin-top: 5px; position: relative; text-align: center'>");
+            if (content == "SCOMNew")
+            {
+                html.AppendLine("<img src='../Images/scom.png' style='height: 100px;'/>");
+            }
+            else if (content == "SCOMClusterHealth")
+            {
+                html.AppendLine("<img src='../Images/active-directory.png' style='height: 100px;'/>");
+            }
+            else
+            {
+
+            }
+            html.AppendLine("<div style='position: absolute; top: 75%; left: 50%; transform: translate(-50%, -50%)'><h3>" + Title + "</h3></div>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
+
             html.AppendLine("<div id='" + LinkID + "' class='value'>");
             html.AppendLine("<div class='cardvalue'>");
             html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
@@ -104,10 +230,9 @@ namespace Automation.Controllers
             html.AppendLine("<div class='cardpanel panel-inverse clearfix resizable-card ui-sortable split " + content + "'>");
             html.AppendLine("<div class='panel-heading'>");
             html.AppendLine("<div class='panel-heading-btn'>");
-            html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='threshold-edit-split' title='Edit Threshold' style='font-size: 0.25em'><i class='fas fa-wrench'></i></a>");
+            html.AppendLine("<a href = '#' class='btn btn-xs btn-icon btn-warning' data-click='threshold-edit-" + content + "' title='Edit Threshold' style='font-size: 0.25em'><i class='fas fa-wrench'></i></a>");
             html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
             html.AppendLine("</div>");
-            //html.AppendLine("<h4 class='panel-title'>" + Title + "</h4>");
             html.AppendLine("</div>");
             html.AppendLine("<div class='panel-body'>");
             html.AppendLine("<div id='panel-threshold' class='panel-threshold' style='display: none'>");
@@ -118,8 +243,28 @@ namespace Automation.Controllers
             html.AppendLine("<p id='threshold-content'>" + content + "</p");
             html.AppendLine("</div>");
             html.AppendLine("</div>");
-            html.AppendLine("<p class='panel-body-title'>");
-            html.AppendLine(Title);
+            //html.AppendLine("<p class='panel-body-title'>");
+            //html.AppendLine(Title);
+            //html.AppendLine("</p>");
+
+
+
+            html.AppendLine("<div style='margin-top: 5px; position: relative; text-align: center'>");
+            if (content == "SCOMDFSHealth")
+            {
+                html.AppendLine("<img src='../Images/fileservericon.png' style='height: 100px;'/>");
+            }
+            else if (content == "SCOMClusterHealth")
+            {
+                html.AppendLine("<img src='../Images/active-directory.png' style='height: 100px;'/>");
+            }
+            else
+            {
+
+            }
+            html.AppendLine("<div style='position: absolute; top: 75%; left: 50%; transform: translate(-50%, -50%)'><h3>" + Title + "</h3></div>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
             html.AppendLine("<div class='value' id='" + LinkID + "'>");
             html.AppendLine("<div class='cardvalue'>");
             html.AppendLine("<p class='cardprimary-value' data-toggle='modal' data-target='#SCOMNewModal'>");
@@ -152,7 +297,56 @@ namespace Automation.Controllers
             return html.ToString();
         }
 
+        public String CreateADCard(int RTserviceErrors, int UKserviceErrors)
+        {
+            StringBuilder html = new StringBuilder();
+            html.AppendLine("<div class='cardpanel panel-inverse clearfix resizable-card ui-sortable ADHealth'>");
+            html.AppendLine("<div class='panel-heading'>");
+            html.AppendLine("<div class='panel-heading-btn'>");
+            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-warning' data-click='threshold-edit-split' title='Edit Threshold' style='font-size: 0.25em'><i class='fas fa-wrench'></i></a>");
+            html.AppendLine("<a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
 
+            html.AppendLine("<div id='' + LinkID + ''>");
+            html.AppendLine("<div style='margin-top: 5px; position: relative; text-align: center'>");
+            html.AppendLine("<p  data-toggle='modal' data-target='#SCOMNewModal'>");
+            html.AppendLine("<img src='../Images/active-directory.png' style='height: 100px;' />");
+            html.AppendLine("<div style='position:absolute; top: 75%; left: 50%; transform: translate(-50%, -50%)'><h3>AD</h3></div>");
+            html.AppendLine("</p>");
+            html.AppendLine("</div>");
+            html.AppendLine("<div style='margin-top: 5px; text-align: center'>");
+            if (UKserviceErrors > 0)
+            {
+                html.AppendLine("<button id='ADUK' class='btn btn-danger btn-lg'>UK</button>");
+            }
+            else
+            {
+                html.AppendLine("<button id='ADUK' class='btn btn-success btn-lg'>UK</button>");
+            }
+            html.AppendLine("<button id='ADSGN'class='btn btn-success btn-lg'>SGN</button>");
+            html.AppendLine("<button id='ADSCOTIA' class='btn btn-success btn-lg'>SCOTIA</button>");
+            html.AppendLine("</div>");
+            html.AppendLine("<div style='text-align: center; margin-top: 5px'>");
+            if (RTserviceErrors > 0)
+            {
+                html.AppendLine("<button id='ADRTGAS' class='btn btn-danger btn-lg'>RTGAS</button>");
+            }
+            else
+            {
+                html.AppendLine("<button id='ADRTGAS' class='btn btn-success btn-lg'>RTGAS</button>");
+            }
+            html.AppendLine("<button id='ADPTL' class='btn btn-success btn-lg'>PTL</button>");
+            html.AppendLine("<button id='ADAIR' class='btn btn-success btn-lg'>AIR</button>");
+            html.AppendLine("</div>");
+            html.AppendLine("<div style='text-align: center; margin-top: 5px'>");
+            html.AppendLine("<button id='ADSSEPN' class='btn btn-success btn-lg'>SSEPN</button>");
+            html.AppendLine("<button id='ADSSEPNPRE' class='btn btn-success btn-lg'>SSEPNPRE</button>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
+            html.AppendLine("</div>");
+            return html.ToString();;
+        }
 
         public string CreateDoughnutGraph(string Title, int Bad, string div, string content)
         {
@@ -233,6 +427,8 @@ namespace Automation.Controllers
             return html.ToString();
         }
 
+        // Function to create new empty columns for sortable aspects of site.
+
         public string CreateColumn()
         {
             StringBuilder html = new StringBuilder();
@@ -246,7 +442,7 @@ namespace Automation.Controllers
 
         //Create Modal function. Creates the threshold modal dialog. For editing and new threshold settings.
 
-        public string CreateModal(string metricType, string type)
+        public string CreateModal(string metricType, string type, string content)
         {
             if (metricType == "split")
             {
@@ -289,11 +485,11 @@ namespace Automation.Controllers
                 html.AppendLine("<div id='ThresholdButtons'>");
                 if (type == "Edit")
                 {
-                    html.AppendLine("<button id='Threshold-" + metricType + "-edit' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
+                    html.AppendLine("<button id='Threshold-" + content + "-edit' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
                 }
                 else
                 {
-                    html.AppendLine("<button id='Threshold-" + metricType + "' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
+                    html.AppendLine("<button id='Threshold-" + content + "' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
                 }
                 html.AppendLine("<button data-dismiss='modal' class='btn btn bg-danger btn-lg'>Cancel</button>");
                 html.AppendLine("</div>");
@@ -331,11 +527,11 @@ namespace Automation.Controllers
                 html.AppendLine("<div id='ThresholdButtons'>");
                 if (type == "Edit")
                 {
-                    html.AppendLine("<button id='Threshold-" + metricType + "-edit' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
+                    html.AppendLine("<button id='Threshold-" + content + "-edit' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
                 }
                 else
                 {
-                    html.AppendLine("<button id='Threshold-" + metricType + "' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
+                    html.AppendLine("<button id='Threshold-" + content + "' data-dismiss='modal' class='btn btn bg-success btn-lg'>OK</button>");
                 }
                 html.AppendLine("<button data-dismiss='modal' class='btn btn bg-danger btn-lg'>Cancel</button>");
                 html.AppendLine("</div>");
@@ -351,8 +547,6 @@ namespace Automation.Controllers
 
             
         }
-
-
 
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3)]
         public async Task<PartialViewResult> GetPartial(string partialName, string sortOrder, int? page, int? pageLength)
@@ -373,7 +567,8 @@ namespace Automation.Controllers
             else if (partialName == "_SCOMAlertNew")
             {
                 var viewModel = new List<SCOMNewViewModel>();
-                List<SCOMAlert> scomalert = await db.SCOMAlert.ToListAsync();
+                DateTime date = new DateTime(1753, 1, 1);
+                List<SCOMAlert> scomalert = await db.SCOMAlert.Where(s => s.Resolved == date).ToListAsync();
 
                 foreach (var alert in scomalert)
                 {
@@ -425,7 +620,46 @@ namespace Automation.Controllers
 
             else if (partialName == "_SCOMClusters")
             {
-                List<SCOM> scom = await db.SCOM.ToListAsync();
+                List<SCOM> scom = await db.SCOM.Where(s => s.Cluster == true).ToListAsync();
+
+                if (!String.IsNullOrWhiteSpace(sortOrder))
+                {
+                    if (sortOrder == "time_desc")
+                        scom = scom.OrderByDescending(s => s.Time).ToList();
+                    else if (sortOrder == "time")
+                        scom = scom.OrderBy(s => s.Time).ToList();
+                    else if (sortOrder == "cluster")
+                        scom = scom.OrderByDescending(s => s.Cluster).ToList();
+                    else if (sortOrder == "cluster_desc")
+                        scom = scom.OrderBy(s => s.Cluster).ToList();
+                    else if (sortOrder == "server")
+                        scom = scom.OrderByDescending(s => s.Server).ToList();
+                    else if (sortOrder == "server_desc")
+                        scom = scom.OrderBy(s => s.Server).ToList();
+                    else if (sortOrder == "healthstate")
+                        scom = scom.OrderByDescending(s => s.HealthState).ToList();
+                    else if (sortOrder == "healthstate_desc")
+                        scom = scom.OrderBy(s => s.HealthState).ToList();
+                    else if (sortOrder == "inmaintenancemode")
+                        scom = scom.OrderByDescending(s => s.InMaintenanceMode).ToList();
+                    else if (sortOrder == "inmaintenancemode_desc")
+                        scom = scom.OrderBy(s => s.InMaintenanceMode).ToList();
+                    else if (sortOrder == "displayname_desc")
+                        scom = scom.OrderByDescending(s => s.DisplayName).ToList();
+                }
+                else
+                {
+                    scom = scom.OrderBy(s => s.DisplayName).ToList();
+                }
+
+                int pageSize = pageLength ?? 5;
+                int pageNumber = page ?? 1;
+                return PartialView(partialName, (IPagedList)scom.ToPagedList(pageNumber, pageSize));
+            }
+
+            else if (partialName == "_SCOMDFS")
+            {
+                List<SCOM> scom = await db.SCOM.Where(s => s.RepGroup == true).ToListAsync();
 
                 if (!String.IsNullOrWhiteSpace(sortOrder))
                 {

@@ -14,13 +14,13 @@
 <table id="table" class="table table-striped table-responsive-sm">
     <tr>
         <th>
-            @Html.ActionLink("Time", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "time" ? "time_desc" : "time", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+            @Html.ActionLink("Time", "GetPartial", "SCOM", new { partialName = "_SCOMDFS", sortOrder = ViewBag.CurrentSort == "time" ? "time_desc" : "time", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
         </th>
         <th>
-            @Html.ActionLink("Health State", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "healthstate" ? "healthstate_desc" : "healthstate", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+            @Html.ActionLink("Health State", "GetPartial", "SCOM", new { partialName = "_SCOMDFS", sortOrder = ViewBag.CurrentSort == "healthstate" ? "healthstate_desc" : "healthstate", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
         </th>
         <th>
-            @Html.ActionLink("Display Name", "GetPartial", "SCOM", new { partialName = "_SCOMClusters", sortOrder = ViewBag.CurrentSort == "displayname" ? "displayname_desc" : "displayname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
+            @Html.ActionLink("Display Name", "GetPartial", "SCOM", new { partialName = "_SCOMDFS", sortOrder = ViewBag.CurrentSort == "displayname" ? "displayname_desc" : "displayname", page = Model.PageNumber, pageLength = ViewBag.PageLength }, new { @class = "SortButton" })
         </th>
     </tr>
 
@@ -33,7 +33,7 @@
             <td>
             @if (item.HealthState.Contains("Error"))
             {
-                    <span><i class="fas fa-exclamation-circle" style="color:red"></i> Error</span>
+                <span><i class="fas fa-exclamation-circle" style="color:red"></i> Error</span>
             }
             else
             {
@@ -84,15 +84,15 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
     $('#sort10').click(function () {
         @(ViewBag.PageLength = "10")
-        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMDFSs&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
     $('#sort15').click(function () {
         @(ViewBag.PageLength = "15")
-        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMDFS&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
     $('#sort20').click(function () {
         @(ViewBag.PageLength = "20")
-        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
+        $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMDFS&sortOrder=@ViewBag.CurrentSort&page=@Model.PageNumber&pageLength=@ViewBag.PageLength')
     })
 
 </script>

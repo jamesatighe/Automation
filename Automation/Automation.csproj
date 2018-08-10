@@ -550,6 +550,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\AD.jpg" />
+    <Content Include="Images\active-directory.png" />
+    <Content Include="Images\fileservericon.png" />
     <Content Include="Images\PowerShell.png" />
     <Content Include="Images\scom.png" />
     <Content Include="ApplicationInsights.config">
@@ -655,6 +657,7 @@
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\PowerShell\ADCreation.cshtml" />
+    <Content Include="Views\Shared\_SCOMDFS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

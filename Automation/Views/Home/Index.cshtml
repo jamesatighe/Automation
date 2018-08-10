@@ -2,6 +2,11 @@
     ViewBag.Title = "Home Page";
 }
 
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken();
+}
+
 <div id="SCOMNewModal" class="modal fade">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -44,7 +49,7 @@
     </div>
 </div>
 
-<div class="row col-centered container-fluid"  style="margin-top: 100px; display: table">
+<div class="row col-centered container-fluid" style="margin-top: 100px; display: table">
     <div class="btn-group" role="button" aria-label="NewWidget">
         <div class="dropdown">
             <button type="button" id="SCOMButton" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SCOM</button>
@@ -53,6 +58,13 @@
                 <a class="dropdown-item" href="#" id="SCOMResolved">Resolved Alerts - Today  (Metric)</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" id="SCOMCluster">SCOM Cluster Health (Split-Metric)</a>
+                <a class="dropdown-item" href="#" id="SCOMDFS">SCOM DFS Health (Split-Metric)</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button" id="ADButton" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AD</button>
+            <div class="dropdown-menu"" aria-labelledby="ADButton">
+                <a class="dropdown-item" href="#" id="ADHealth">AD Health</a>
             </div>
         </div>
         <button type="button" id="doughnutChart" class="btn btn-info">Doughnut Chart</button>
@@ -71,8 +83,40 @@
         <div id="SCOMPartial">
             Loading . . .
         </div>
-    </div>   
- </div>
+    </div>
+
+    <div class='cardpanel panel-inverse clearfix resizable-card ui-sortable split " + content + "' style="width: 270px">
+        <div class='panel-heading'>
+            <div class='panel-heading-btn'>
+                <a href='#' class='btn btn-xs btn-icon btn-warning' data-click='threshold-edit-split' title='Edit Threshold' style='font-size: 0.25em'><i class='fas fa-wrench'></i></a>
+                <a href='#' class='btn btn-xs btn-icon btn-circle btn-danger' data-click='panel-remove' style='font-size: 0.25em'><i class='fa fa-times'></i></a>
+            </div>
+        </div>
+
+        <div id='" + LinkID + "'>
+            <div style="margin-top: 5px; position: relative; text-align: center">
+                <p  data-toggle='modal' data-target='#SCOMNewModal'>
+                    <img src="~/Images/active-directory.png" style="height: 100px;" />
+                    <div style="position:absolute; top: 75%; left: 50%; transform: translate(-50%, -50%)"><h3>AD</h3></div>
+                </p>
+            </div>
+            <div style="margin-top: 5px; text-align: center">
+                <button class="btn btn-success btn-lg">UK</button>
+                <button class="btn btn-success btn-lg">SGN</button>
+                <button class="btn btn-success btn-lg">SCOTIA</button>
+            </div>
+            <div style="text-align: center; margin-top: 5px">
+                <button class="btn btn-success btn-lg">RTGAS</button>
+                <button class="btn btn-success btn-lg">PTL</button>
+                <button class="btn btn-success btn-lg">AIR</button>
+            </div>
+            <div style="text-align: center; margin-top: 5px">
+                <button class="btn btn-success btn-lg">SSEPN</button>
+                <button class="btn btn-success btn-lg">SSEPNPRE</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section Scripts {
@@ -88,7 +132,12 @@
             setTimeout(InitiateSort(), 5000);
 
 
+
         });
+        var form = $('#__AjaxAntiForgeryForm');
+        var token = $('input[name="__RequestVerificationToken"]', form).val()
+
+        // Links to load relevant partial views (New Alerts Clusters etc)
 
         $(document).on('click', '#SCOMNewLink', function () {
             $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMAlertNew');
@@ -97,6 +146,11 @@
         $(document).on('click', '#SCOMClusterLink', function () {
             $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMClusters');
         });
+
+        $(document).on('click', '#SCOMDFSLink', function () {
+            $('#SCOMAlert').load('/SCOM/GetPartial?partialName=_SCOMDFS');
+        });
+
         $(document).ready(function () {
             $('#SCOMNewModal').on('show.bs.modal', function () {
                 $(this).find('.modal-dialog').css({
@@ -118,7 +172,7 @@
         $(document).on('click', '#SCOMNew', function () {
             var exists = $('#SCOMPartial').find('.SCOMNew');
             if (exists.length == 0) {
-                $('#threshold').load('/SCOM/CreateModal?metricType=SCOMNew');
+                $('#threshold').load('/SCOM/CreateModal?metricType=single&content=SCOMNew');
                 setTimeout(function () {
                     var card = $('#SCOMPartial .SCOMNew').find('#panel-threshold');
                     if (card.length == 0) {
@@ -143,11 +197,26 @@
 
             }
         });
-
+        
         $(document).on('click', '#SCOMCluster', function () {
             var exists = $('#SCOMPartial').find('.SCOMClusterHealth');
             if (exists.length == 0) {
-                $('#threshold').load('/SCOM/CreateModal?metricType=split');
+                $('#threshold').load('/SCOM/CreateModal?metricType=split&content=SCOMCluster');
+                setTimeout(function () {
+                    $('#ThresholdModal').modal('show');
+                }, 1000);
+            }
+            else {
+                $('#alertModal').find('#alertDesc')[0].innerHTML = "The selected monitor is already present on the dashboard.";
+                $('#alertModal').find('#alertMessage')[0].innerHTML = "No action is required.";
+                $('#alertModal').modal('show');
+            }
+        });
+
+        $(document).on('click', '#SCOMDFS', function () {
+            var exists = $('#SCOMPartial').find('.SCOMDFSHealth');
+            if (exists.length == 0) {
+                $('#threshold').load('/SCOM/CreateModal?metricType=split&content=SCOMDFS');
                 setTimeout(function () {
                     $('#ThresholdModal').modal('show');
                 }, 1000);
@@ -160,12 +229,45 @@
             }
         });
 
+        // Function to load AD Card
+
+        $(document).on('click', '#ADHealth', function () {
+            var exists = $('#SCOMPartial').find('.ADHealth');
+            if (exists.length == 0) {
+                // Load card
+                $.ajax({
+                    type: "GET",
+                    url: "/SCOM/GetADHealth",
+                    success: function (data) {
+                        var results = data;
+                        var RTserviceErrors = results.split(",")[0];
+                        var UKserviceErrors = results.split(",")[1];
+                        var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
+                        $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateADCard?RTserviceErrors=' + RTserviceErrors + '&UKserviceErrors=' + UKserviceErrors));
+                    }
+                });
+            }
+            else {
+                $('#alertModal').find('#alertDesc')[0].innerHTML = "The selected monitor is already present on the dashboard.";
+                $('#alertModal').find('#alertMessage')[0].innerHTML = "No action is required.";
+                $('#alertModal').modal('show');
+            }
+        })
+
+
+
+        // Functions when clicking the OK button on Set Alert Threshold Modal
+
         $(document).on('click', '#Threshold-SCOMNew', function () {
+
             var warning = document.getElementById('warning').value;
             var error = document.getElementById('error').value;
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                data: {
+                    __RequestVerificationToken: token
+                },
                 success: function (data) {
                     var results = data;
                     var total = results.split(",")[0];
@@ -184,8 +286,11 @@
             var warning = document.getElementById('warning').value;
             var error = document.getElementById('error').value;
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                data: {
+                    __RequestVerificationToken: token
+                },
                 success: function (data) {
                     var results = data;
                     var total = results.split(",")[0];
@@ -201,7 +306,9 @@
             $('#ThresholdModal').modal('hide');
         });
 
-        $(document).on('click', '#Threshold-split', function () {
+        // SCOM Cluster Threshold card
+
+        $(document).on('click', '#Threshold-SCOMCluster', function () {
             var warningw = document.getElementById('warningw').value;
             var warninge = document.getElementById('warninge').value;
             var errorw = document.getElementById('errorw').value;
@@ -226,7 +333,9 @@
             });
         });
 
-        $(document).on('click', '#Threshold-split-edit', function () {
+        // SCOM Cluster Edit Threshold card
+
+        $(document).on('click', '#Threshold-SCOMClusterHealth-edit', function () {
             var warningw = document.getElementById('warningw').value;
             var warninge = document.getElementById('warninge').value;
             var errorw = document.getElementById('errorw').value;
@@ -242,13 +351,72 @@
                     var total = results.split(",")[2];
                     var link = results.split(",")[3];
                     var title = results.split(",")[4];
+                    
                     title = title.replace(/ /g, "%20");
-
 
                     var tempwarningw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-w')[0];
                     var tempwarninge = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-warning-e')[0];
                     var temperrorw = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-w')[0];
                     var temperrore = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold #threshold-error-e')[0];
+                    tempwarningw.innerHTML = warningw;
+                    tempwarninge.innerHTML = warninge;
+                    temperrorw.innerHTML = errorw;
+                    temperrore.innerHTML = errore;
+                }
+            });
+        });
+
+        // SCOM DFS Threshold card
+
+        $(document).on('click', '#Threshold-SCOMDFS', function () {
+            var warningw = document.getElementById('warningw').value;
+            var warninge = document.getElementById('warninge').value;
+            var errorw = document.getElementById('errorw').value;
+            var errore = document.getElementById('errore').value;
+
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMDFSHealth?warningw=warningw&warninge=warninge&errorw=errorw&errore=errore",
+                success: function (data) {
+                    var results = data;
+                    var warning = results.split(",")[0];
+                    var error = results.split(",")[1];
+                    var total = results.split(",")[2];
+                    var link = results.split(",")[3];
+                    var title = results.split(",")[4];
+                    title = title.replace(/ /g, "%20");
+
+                    var column = $('#SCOMPartial').find('.row .sortable .cardpanel').length + 1
+                    $('#SCOMPartial').find('.sortable:first').append($('<div id= "column_' + column + '" class="cardpaneldiv" >').load('/SCOM/CreateSplitMetricCard?total=' + total + '&Title=' + title + '&Label=Total&Warning=' + warning + '&Error=' + error + '&LinkID=' + link + '&content=SCOMDFSHealth' + "&warningw=" + warningw + "&warninge=" + warninge + "&errorw=" + errorw + "&errore=" + errore));
+                },
+
+            });
+        });
+
+        // SCOM DFS Edit Threshold card
+        $(document).on('click', '#Threshold-SCOMDFSHealth-edit', function () {
+            var warningw = document.getElementById('warningw').value;
+            var warninge = document.getElementById('warninge').value;
+            var errorw = document.getElementById('errorw').value;
+            var errore = document.getElementById('errore').value;
+
+            $.ajax({
+                type: "GET",
+                url: "/SCOM/GetSCOMDFSHealth?warningw=warningw&warninge=warninge&errorw=errorw&errore=errore",
+                success: function (data) {
+                    var results = data;
+                    var warning = results.split(",")[0];
+                    var error = results.split(",")[1];
+                    var total = results.split(",")[2];
+                    var link = results.split(",")[3];
+                    var title = results.split(",")[4];
+                    title = title.replace(/ /g, "%20");
+
+
+                    var tempwarningw = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-warning-w')[0];
+                    var tempwarninge = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-warning-e')[0];
+                    var temperrorw = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-error-w')[0];
+                    var temperrore = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-error-e')[0];
                     tempwarningw.innerHTML = warningw;
                     tempwarninge.innerHTML = warninge;
                     temperrorw.innerHTML = errorw;
@@ -269,6 +437,8 @@
             });
         }
 
+        // Function to refresh SCOM cards
+
         function SCOMRefresh() {
 
             var exists = $('#SCOMPartial .SCOMNew').find('#panel-threshold');
@@ -276,8 +446,11 @@
                 var warning = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-warning')[0].outerText;
                 var error = $('#SCOMPartial .SCOMNew').find('#panel-threshold #threshold-error')[0].outerText;
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "/SCOM/GetSCOMAlerts?type=New&warning=" + warning + "&error=" + error,
+                    data: {
+                        __RequestVerificationToken: token
+                    },
                     success: function (data) {
                         var results = data;
                         var total = results.split(",")[0];
@@ -300,37 +473,6 @@
                 });
             }
 
-            //$.ajax({
-            //    type: "GET",
-            //    url: "/SCOM/GetSCOMClusterHealth",
-            //    success: function (data) {
-            //        var results = data;
-            //        var warning = results.split(",")[0];
-            //        var error = results.split(",")[1];
-            //        var total = results.split(",")[2];
-            //        var link = results.split(",")[3];
-
-            //        var cards = $('div.cardpanel.SCOMClusterHealth')
-            //        $.each(cards, function (i, val) {
-            //            var totalarr = val.getElementsByClassName('cardprimary-value')
-            //            for (var i = totalarr.length - 1; i >= 0; --i) {
-            //                totalarr[i].innerHTML = total;
-            //            }
-            //            var warningarr = val.getElementsByClassName('cardvalue-left')
-            //            for (var i = warningarr.length - 1; i >= 0; --i) {
-            //                var item = warningarr[i];
-            //                item.lastChild.previousElementSibling.children[1].textContent = warning
-            //            }
-            //            var errorarr = val.getElementsByClassName('cardvalue-right')
-            //            for (var i = errorarr.length - 1; i >= 0; --i) {
-            //                var item = errorarr[i];
-            //                item.lastChild.previousElementSibling.children[1].textContent = error
-            //            }
-
-            //        });
-            //    }
-            //});
-
             var exists = $('#SCOMPartial .SCOMClusterHealth').find('#panel-threshold');
             if (exists.length == 0) {
 
@@ -343,16 +485,22 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "/SCOM/GetSCOMClusterHealth",
+                    url: "/SCOM/GetSCOMClusterHealth?warningw=" + warningw + "&warninge=" + warninge + "&errorw=" + errorw + "&errore=" + errore,
                     success: function (data) {
                         var results = data;
-                        var warning = results.split(",")[0];
-                        var error = results.split(",")[1];
+                        var warning = parseInt(results.split(",")[0]);
+                        var error = parseInt(results.split(",")[1]);
                         var total = results.split(",")[2];
                         var link = results.split(",")[3];
+                        var warningw = parseInt(results.split(",")[5]);
+                        var warninge = parseInt(results.split(",")[6]);
+                        var errorw = parseInt(results.split(",")[7]);
+                        var errore = parseInt(results.split(",")[8]);
+
+
                         var card = $('div.cardpanel.SCOMClusterHealth')
-                        var total = $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value')[0].outerText;
-                        total.innerHTML = total;
+                        var Total = $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value')[0];
+                        Total.innerHTML = total;
                         var leftValue = $('#SCOMPartial .SCOMClusterHealth').find('.cardvalue-left')[0];
                         leftValue.lastChild.previousElementSibling.children[1].textContent = warning;
                         var rightValue = $('#SCOMPartial .SCOMClusterHealth').find('.cardvalue-right')[0];
@@ -365,8 +513,54 @@
 
                             $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value').css("color", "red");
                         }
-                        if (total < error && total < warning) {
+                        if (warning < warningw && warning < warninge && error < errorw && error < errore) {
                             $('#SCOMPartial .SCOMClusterHealth').find('.cardprimary-value').css("color", "green");
+                        }
+                    }
+                });
+            }
+
+            var exists = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold');
+            if (exists.length == 0) {
+
+            }
+            else {
+                var warningw = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-warning-w')[0].outerText;
+                var warninge = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-warning-e')[0].outerText;
+                var errorw = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-error-w')[0].outerText;
+                var errore = $('#SCOMPartial .SCOMDFSHealth').find('#panel-threshold #threshold-error-e')[0].outerText;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/SCOM/GetSCOMDFSHealth?warningw=" + warningw + "&warninge=" + warninge + "&errorw=" + errorw + "&errore=" + errore,
+                    success: function (data) {
+                        var results = data;
+                        var warning = results.split(",")[0];
+                        var error = results.split(",")[1];
+                        var total = results.split(",")[2];
+                        var link = results.split(",")[3];
+                        var warningw = results.split(",")[5];
+                        var warninge = results.split(",")[6];
+                        var errorw = results.split(",")[7];
+                        var errore = results.split(",")[8];
+
+                        var card = $('div.cardpanel.SCOMDFSHealth')
+                        var Total = $('#SCOMPartial .SCOMDFSHealth').find('.cardprimary-value')[0];
+                        Total.innerHTML = total;
+                        var leftValue = $('#SCOMPartial .SCOMDFSHealth').find('.cardvalue-left')[0];
+                        leftValue.lastChild.previousElementSibling.children[1].textContent = warning;
+                        var rightValue = $('#SCOMPartial .SCOMDFSHealth').find('.cardvalue-right')[0];
+                        rightValue.lastChild.previousElementSibling.children[1].textContent = error;
+
+                        if (warning > warningw || error > errorw) {
+                            $('#SCOMPartial .SCOMDFSHealth').find('.cardprimary-value').css("color", "orange");
+                        }
+                        if (warning > warninge || error > errore) {
+
+                            $('#SCOMPartial .SCOMDFSHealth').find('.cardprimary-value').css("color", "red");
+                        }
+                        if (warning < warningw && warning < warninge || error < errorw && error < errore) {
+                            $('#SCOMPartial .SCOMDFSHealth').find('.cardprimary-value').css("color", "green");
                         }
 
 

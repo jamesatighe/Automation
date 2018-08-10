@@ -29,13 +29,31 @@ $(document).on("click", "[data-click=threshold-edit]", function (a) {
     }, 1000);
 })
 
-$(document).on("click", "[data-click=threshold-edit-split]", function (a) {
+$(document).on("click", "[data-click=threshold-edit-SCOMClusterHealth]", function (a) {
     $(this).tooltip("hide");
     var warningw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-w')[0].innerHTML;
     var warninge = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-e')[0].innerHTML;
     var errorw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-w')[0].innerHTML;
     var errore = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-e')[0].innerHTML;
-    $('#threshold').load('/SCOM/CreateModal?metricType=split&Type=Edit');
+    $('#threshold').load('/SCOM/CreateModal?metricType=split&Type=Edit&content=SCOMClusterHealth');
+
+    setTimeout(function () {
+
+        $('#ThresholdModal').find('#warningw')[0].value = warningw;
+        $('#ThresholdModal').find('#warninge')[0].value = warninge;
+        $('#ThresholdModal').find('#errorw')[0].value = errorw;
+        $('#ThresholdModal').find('#errore')[0].value = errore;
+        $('#ThresholdModal').modal('show');
+    }, 1000);
+})
+
+$(document).on("click", "[data-click=threshold-edit-SCOMDFSHealth]", function (a) {
+    $(this).tooltip("hide");
+    var warningw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-w')[0].innerHTML;
+    var warninge = $(this).parents('.cardpanel').find('#panel-threshold #threshold-warning-e')[0].innerHTML;
+    var errorw = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-w')[0].innerHTML;
+    var errore = $(this).parents('.cardpanel').find('#panel-threshold #threshold-error-e')[0].innerHTML;
+    $('#threshold').load('/SCOM/CreateModal?metricType=split&Type=Edit&content=SCOMDFSHealth');
 
     setTimeout(function () {
 
